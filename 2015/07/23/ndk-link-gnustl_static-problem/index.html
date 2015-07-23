@@ -1,29 +1,29 @@
 
  <!DOCTYPE HTML>
-<html >
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   
-    <title>Hello World | 奇点2050</title>
+    <title>ndk链接gnustl_static产生的问题 | 奇点2050</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Derek Quan">
     
 
     
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
+    <meta name="description" content="今天遇到一个ndk编译的程序运行崩溃的问题，定位到下面的赋值语句会产生奇怪析构错误123*recv_status_ = Status(    static_cast&amp;lt;StatusCode&amp;gt;(status_code_),    status_details_ ? grpc::string(status_details_) : grpc::string());
+错误如下1invalid a">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://transing.xyz/2015/07/23/hello-world/index.html">
+<meta property="og:title" content="ndk链接gnustl_static产生的问题">
+<meta property="og:url" content="http://transing.xyz/2015/07/23/ndk-link-gnustl_static-problem/index.html">
 <meta property="og:site_name" content="奇点2050">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
-<meta property="og:updated_time" content="2015-07-23T02:34:12.365Z">
+<meta property="og:description" content="今天遇到一个ndk编译的程序运行崩溃的问题，定位到下面的赋值语句会产生奇怪析构错误123*recv_status_ = Status(    static_cast&amp;lt;StatusCode&amp;gt;(status_code_),    status_details_ ? grpc::string(status_details_) : grpc::string());
+错误如下1invalid a">
+<meta property="og:updated_time" content="2015-07-23T04:07:50.630Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
-Quick">
+<meta name="twitter:title" content="ndk链接gnustl_static产生的问题">
+<meta name="twitter:description" content="今天遇到一个ndk编译的程序运行崩溃的问题，定位到下面的赋值语句会产生奇怪析构错误123*recv_status_ = Status(    static_cast&amp;lt;StatusCode&amp;gt;(status_code_),    status_details_ ? grpc::string(status_details_) : grpc::string());
+错误如下1invalid a">
 
     
     <link rel="alternative" href="/atom.xml" title="奇点2050" type="application/atom+xml">
@@ -51,7 +51,7 @@ Quick">
 				<h1 class="site-name"><a href="/" title="奇点2050">奇点2050</a></h1>
 				<h2 class="blog-motto"></h2>
 			</div>
-			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
 			</a></div>
 			<nav class="animated">
 				<ul>
@@ -83,35 +83,31 @@ Quick">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/23/hello-world/" title="Hello World" itemprop="url">Hello World</a>
+      <a href="/2015/07/23/ndk-link-gnustl_static-problem/" title="ndk链接gnustl_static产生的问题" itemprop="url">ndk链接gnustl_static产生的问题</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="Derek Quan" target="_blank" itemprop="author">Derek Quan</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-23T02:34:12.365Z" itemprop="datePublished"> 發表於 2015-07-23</time>
+    <time datetime="2015-07-23T04:07:19.000Z" itemprop="datePublished"> 发表于 2015-07-23</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
 		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目錄</strong>
+			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick_Start"><span class="toc-number">1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create_a_new_post"><span class="toc-number">1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run_server"><span class="toc-number">1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate_static_files"><span class="toc-number">1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy_to_remote_sites"><span class="toc-number">1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+			
 		
 		</div>
 		
-		<p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+		<p>今天遇到一个ndk编译的程序运行崩溃的问题，定位到下面的赋值语句会产生奇怪析构错误<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">*recv_status_ = Status(</span><br><span class="line">    <span class="keyword">static_cast</span>&lt;StatusCode&gt;(status_code_),</span><br><span class="line">    status_details_ ? grpc::<span class="built_in">string</span>(status_details_) : grpc::<span class="built_in">string</span>());</span><br></pre></td></tr></table></figure></p>
+<p>错误如下<br><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">invalid address <span class="keyword">or</span> address <span class="keyword">of</span> corrupt <span class="keyword">block</span> <span class="number">0</span>x78366c48 passed <span class="keyword">to</span> dlfree</span><br></pre></td></tr></table></figure></p>
+<p>最终,根据这个链接里的说法，得到解决<br><a href="https://groups.google.com/forum/#!msg/android-ndk/b6oPfcHICOM/ixK3lCYE-5sJ" target="_blank" rel="external">https://groups.google.com/forum/#!msg/android-ndk/b6oPfcHICOM/ixK3lCYE-5sJ</a><br><figure class="highlight vbnet"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Because <span class="keyword">when</span> you link gnustl_static <span class="keyword">into</span> both test.exe <span class="keyword">and</span> libfoo.so, <span class="keyword">each</span> one <span class="keyword">of</span> them gets a copy <span class="keyword">of</span> various C++ runtime internal <span class="keyword">global</span> objects that are used <span class="keyword">to</span> implement exceptions, RTTI <span class="keyword">and</span> <span class="keyword">static</span> C++ construction. The C++ runtime code <span class="keyword">is</span> easily confused <span class="keyword">and</span> doesn<span class="comment">'t deal very well with this case. Results may vary though, but in this case, a crash happens.</span></span><br></pre></td></tr></table></figure></p>
+<p>原来是因为我的exe程序和so库都链接到了gnustl_static这个库上，造成了string类里的vtable重复，引起了混乱。<br>所以把exe程序和so库的链接选项都改为<br><figure class="highlight ceylon"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">APP<span class="number">_</span>STL          := gnustl<span class="number">_</span><span class="annotation">shared</span></span><br></pre></td></tr></table></figure></p>
+<p>问题解决。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -124,7 +120,7 @@ Quick">
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://transing.xyz/2015/07/23/hello-world/" data-title="Hello World | 奇点2050" data-tsina="null" class="share clearfix">
+	  <div data-url="http://transing.xyz/2015/07/23/ndk-link-gnustl_static-problem/" data-title="ndk链接gnustl_static产生的问题 | 奇点2050" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -135,20 +131,45 @@ Quick">
    	       
 	</article>
 	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/07/23/build-grpc-for-android-app/" title="编译grpc得到供android app使用的jar包">
+  <strong>上一篇：</strong><br/>
+  <span>
+  编译grpc得到供android app使用的jar包</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/07/23/deploy-ghost-on-bae/"  title="在BAE上部署Ghost开发版">
+ <strong>下一篇：</strong><br/> 
+ <span>在BAE上部署Ghost开发版
+</span>
+</a>
+</div>
+
+</nav>
+
 	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/07/23/ndk-link-gnustl_static-problem/" data-title="ndk链接gnustl_static产生的问题" data-url="http://transing.xyz/2015/07/23/ndk-link-gnustl_static-problem/"></div>
+</section>
+
 
 </div>  
-      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
   <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目錄</strong>
+  <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick_Start"><span class="toc-number">1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create_a_new_post"><span class="toc-number">1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run_server"><span class="toc-number">1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate_static_files"><span class="toc-number">1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy_to_remote_sites"><span class="toc-number">1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+ 
  
   </div>
 
 <div id="asidepart">
-<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
 <aside class="clearfix">
 
   
@@ -156,18 +177,12 @@ Quick">
   
 
   <div class="linkslist">
-  <p class="asidetitle">友情鏈接</p>
+  <p class="asidetitle">友情链接</p>
     <ul>
         
           <li>
             
-            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
-            
-          </li>
-        
-          <li>
-            
-            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            	<a href="https://transing.duapp.com" target="_blank" title=" 本博客Ghost版本">奇点2050</a>
             
           </li>
         
@@ -178,7 +193,7 @@ Quick">
 
 
   <div class="rsspart">
-	<a href="/atom.xml" target="_blank" title="rss">RSS 訂閱</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
 </div>
 
 </aside>
@@ -186,17 +201,7 @@ Quick">
     </div>
     <footer><div id="footer" >
 	
-	<div class="line">
-		<span></span>
-		<div class="author"></div>
-	</div>
 	
-	
-	<section class="info">
-		<p> Hello ,I&#39;m Larry Page in Google. <br/>
-			This is my blog,believe it or not.</p>
-	</section>
-	 
 	<div class="social-font" class="clearfix">
 		
 		
@@ -351,6 +356,18 @@ $(document).ready(function(){
 
 
 
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"transing"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
 
 
 
@@ -386,12 +403,14 @@ $(document).ready(function(){
 
 
 
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1255716199'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s23.cnzz.com/z_stat.php%3Fid%3D1255716199' type='text/javascript'%3E%3C/script%3E"));</script>
+
 <!-- Analytics End -->
 
 <!-- Totop Begin -->
 
 	<div id="totop">
-	<a title="返回頂部"><img src="/img/scrollup.png"/></a>
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
 	</div>
 	<script src="/js/totop.js"></script>
 

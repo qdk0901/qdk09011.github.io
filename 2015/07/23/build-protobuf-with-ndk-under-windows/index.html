@@ -1,0 +1,434 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>windows下使用ndk编译protobuf | 奇点2050</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Derek Quan">
+    
+
+    
+    <meta name="description" content="12git clone https://github.com/google/protobuf.gitgit checkout v3.0.0-alpha-3.1
+在protobuf文件夹下建立build.bat，内容如下123set PATH=%PATH%;E:\devel\android-ndk-r9dndk-build.cmdpause
+在protobuf文件夹下新建jni文件夹，然后新建And">
+<meta property="og:type" content="article">
+<meta property="og:title" content="windows下使用ndk编译protobuf">
+<meta property="og:url" content="http://transing.xyz/2015/07/23/build-protobuf-with-ndk-under-windows/index.html">
+<meta property="og:site_name" content="奇点2050">
+<meta property="og:description" content="12git clone https://github.com/google/protobuf.gitgit checkout v3.0.0-alpha-3.1
+在protobuf文件夹下建立build.bat，内容如下123set PATH=%PATH%;E:\devel\android-ndk-r9dndk-build.cmdpause
+在protobuf文件夹下新建jni文件夹，然后新建And">
+<meta property="og:updated_time" content="2015-07-23T04:12:42.324Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="windows下使用ndk编译protobuf">
+<meta name="twitter:description" content="12git clone https://github.com/google/protobuf.gitgit checkout v3.0.0-alpha-3.1
+在protobuf文件夹下建立build.bat，内容如下123set PATH=%PATH%;E:\devel\android-ndk-r9dndk-build.cmdpause
+在protobuf文件夹下新建jni文件夹，然后新建And">
+
+    
+    <link rel="alternative" href="/atom.xml" title="奇点2050" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="奇点2050" title="奇点2050"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="奇点2050">奇点2050</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:transing.xyz">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/23/build-protobuf-with-ndk-under-windows/" title="windows下使用ndk编译protobuf" itemprop="url">windows下使用ndk编译protobuf</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Derek Quan" target="_blank" itemprop="author">Derek Quan</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-23T04:12:21.000Z" itemprop="datePublished"> 发表于 2015-07-23</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			
+		
+		</div>
+		
+		<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone <span class="string">https:</span><span class="comment">//github.com/google/protobuf.git</span></span><br><span class="line">git checkout v3.0.0-alpha-<span class="number">3.1</span></span><br></pre></td></tr></table></figure>
+<p>在protobuf文件夹下建立build.bat，内容如下<br><figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> <span class="built_in">PATH</span>=<span class="envvar">%PATH%</span>;E:\devel\android-ndk-r9d</span><br><span class="line">ndk-build.<span class="built_in">cmd</span></span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure></p>
+<p>在protobuf文件夹下新建jni文件夹，然后新建Android.mk文件，里面内容如如下(这里的内容主要是参考src/Makefile.am文件得到的)<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"># Copyright <span class="number">2006</span> The Android Open Source Project</span><br><span class="line"></span><br><span class="line"><span class="string">LOCAL_PATH :</span>= $(call my-dir)  </span><br><span class="line"><span class="string">SRC_PATH :</span>= ../src</span><br><span class="line"></span><br><span class="line">include $(CLEAR_VARS)</span><br><span class="line"><span class="label"></span><br><span class="line">LOCAL_CFLAGS:</span>= -DHAVE_PTHREAD=<span class="number">1</span></span><br><span class="line"><span class="label"></span><br><span class="line">LOCAL_SRC_FILES:</span>= \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf<span class="regexp">/stubs/</span>atomicops_internals_x86_gcc.cc         \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf<span class="regexp">/stubs/</span>atomicops_internals_x86_msvc.cc        \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf<span class="regexp">/stubs/</span>common.cc                              \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf<span class="regexp">/stubs/</span>once.cc                                \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf<span class="regexp">/stubs/</span>stringprintf.cc                        \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/arena.cc                                     \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/arenastring.cc                               \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/extension_set.cc                             \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/generated_message_util.cc                    \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/message_lite.cc                              \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/repeated_field.cc                            \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/wire_format_lite.cc                          \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf<span class="regexp">/io/</span>coded_stream.cc                           \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf<span class="regexp">/io/</span>zero_copy_stream.cc                       \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf<span class="regexp">/io/</span>zero_copy_stream_impl_lite.cc \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/any.pb.cc                                    \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/api.pb.cc                                    \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/any.cc                                       \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/descriptor.cc                                \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/descriptor_database.cc                       \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/descriptor.pb.cc                             \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/duration.pb.cc                               \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/dynamic_message.cc                           \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/empty.pb.cc                                  \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/extension_set_heavy.cc                       \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/field_mask.pb.cc                             \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/generated_message_reflection.cc              \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/map_field.cc                                 \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/message.cc                                   \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/reflection_ops.cc                            \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/service.cc                                   \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/source_context.pb.cc                         \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/struct.pb.cc                                 \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf<span class="regexp">/stubs/</span>structurally_valid.cc                  \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf<span class="regexp">/stubs/</span>strutil.cc                             \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf<span class="regexp">/stubs/</span>substitute.cc                          \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/text_format.cc                               \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/timestamp.pb.cc                              \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/type.pb.cc                                   \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/unknown_field_set.cc                         \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/wire_format.cc                               \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf/wrappers.pb.cc                               \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf<span class="regexp">/io/</span>gzip_stream.cc                            \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf<span class="regexp">/io/</span>printer.cc                                \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf<span class="regexp">/io/</span>strtod.cc                                 \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf<span class="regexp">/io/</span>tokenizer.cc                              \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf<span class="regexp">/io/</span>zero_copy_stream_impl.cc                  \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf<span class="regexp">/compiler/</span>importer.cc                         \</span><br><span class="line">    $(SRC_PATH)<span class="regexp">/google/</span>protobuf<span class="regexp">/compiler/</span>parser.cc</span><br><span class="line"><span class="label"></span><br><span class="line">LOCAL_C_INCLUDES:</span>= \</span><br><span class="line">    $(LOCAL_PATH)<span class="regexp">/../</span>src \</span><br><span class="line">    $(LOCAL_PATH)<span class="regexp">/../</span></span><br><span class="line"></span><br><span class="line"><span class="string">LOCAL_LDLIBS :</span>= -L$(SYSROOT)<span class="regexp">/usr/</span>lib -lz</span><br><span class="line"><span class="string">LOCAL_SHARED_LIBRARIES:</span>= </span><br><span class="line"><span class="string">LOCAL_MODULE:</span>= protobuf</span><br><span class="line"><span class="string">LOCAL_MODULE_TAGS :</span>= optional</span><br><span class="line"></span><br><span class="line">include $(BUILD_SHARED_LIBRARY)</span><br></pre></td></tr></table></figure></p>
+<p>再建立Application.mk文件，内容如下<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">APP_MODULES      :</span>= protobuf</span><br><span class="line"><span class="string">APP_PLATFORM     :</span>= android-<span class="number">9</span></span><br><span class="line"><span class="string">APP_ABI          :</span>= armeabi-v7a</span><br><span class="line"><span class="string">APP_STL          :</span>= gnustl_static</span><br><span class="line"><span class="string">APP_OPTIM        :</span>= release</span><br><span class="line"></span><br><span class="line"><span class="string">APP_CPPFLAGS     :</span>= -fexceptions -frtti</span><br></pre></td></tr></table></figure></p>
+<p>过程中会提示缺少config.h和pbconfig.h，这两个文件是跑configure后才生成，从linux编译一次protobuf生成后拷贝到windows就好了。<br>或者自己手动建立，config.h的内容如下<br><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* config.h.  Generated from config.h.in by configure.  */</span></span><br><span class="line"><span class="comment">/* config.h.in.  Generated from configure.ac by autoheader.  */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* the name of &lt;hash_map&gt; */</span></span><br><span class="line"><span class="preprocessor">#define HASH_MAP_CLASS unordered_map</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* the location of &lt;unordered_map&gt; or &lt;hash_map&gt; */</span></span><br><span class="line"><span class="preprocessor">#define HASH_MAP_H &lt;tr1/unordered_map&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* the namespace of hash_map/hash_set */</span></span><br><span class="line"><span class="preprocessor">#define HASH_NAMESPACE std::tr1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* the name of &lt;hash_set&gt; */</span></span><br><span class="line"><span class="preprocessor">#define HASH_SET_CLASS unordered_set</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* the location of &lt;unordered_set&gt; or &lt;hash_set&gt; */</span></span><br><span class="line"><span class="preprocessor">#define HASH_SET_H &lt;tr1/unordered_set&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you have the &lt;dlfcn.h&gt; header file. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_DLFCN_H 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you have the &lt;fcntl.h&gt; header file. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_FCNTL_H 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you have the `ftruncate' function. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_FTRUNCATE 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* define if the compiler has hash_map */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_HASH_MAP 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* define if the compiler has hash_set */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_HASH_SET 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you have the &lt;inttypes.h&gt; header file. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_INTTYPES_H 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you have the &lt;limits.h&gt; header file. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_LIMITS_H 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you have the &lt;memory.h&gt; header file. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_MEMORY_H 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you have the `memset' function. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_MEMSET 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you have the `mkdir' function. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_MKDIR 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define if you have POSIX threads libraries and header files. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_PTHREAD 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you have the &lt;stdint.h&gt; header file. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_STDINT_H 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you have the &lt;stdlib.h&gt; header file. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_STDLIB_H 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you have the `strchr' function. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_STRCHR 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you have the `strerror' function. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_STRERROR 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you have the &lt;strings.h&gt; header file. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_STRINGS_H 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you have the &lt;string.h&gt; header file. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_STRING_H 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you have the `strtol' function. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_STRTOL 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you have the &lt;sys/stat.h&gt; header file. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_SYS_STAT_H 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you have the &lt;sys/types.h&gt; header file. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_SYS_TYPES_H 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you have the &lt;unistd.h&gt; header file. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_UNISTD_H 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Enable classes using zlib compression. */</span></span><br><span class="line"><span class="preprocessor">#define HAVE_ZLIB 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to the sub-directory in which libtool stores uninstalled libraries.</span><br><span class="line">   */</span></span><br><span class="line"><span class="preprocessor">#define LT_OBJDIR ".libs/"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Name of package */</span></span><br><span class="line"><span class="preprocessor">#define PACKAGE "protobuf"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to the address where bug reports for this package should be sent. */</span></span><br><span class="line"><span class="preprocessor">#define PACKAGE_BUGREPORT "protobuf@googlegroups.com"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to the full name of this package. */</span></span><br><span class="line"><span class="preprocessor">#define PACKAGE_NAME "Protocol Buffers"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to the full name and version of this package. */</span></span><br><span class="line"><span class="preprocessor">#define PACKAGE_STRING "Protocol Buffers 3.0.0-alpha-3"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to the one symbol short name of this package. */</span></span><br><span class="line"><span class="preprocessor">#define PACKAGE_TARNAME "protobuf"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to the home page for this package. */</span></span><br><span class="line"><span class="preprocessor">#define PACKAGE_URL ""</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to the version of this package. */</span></span><br><span class="line"><span class="preprocessor">#define PACKAGE_VERSION "3.0.0-alpha-3"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to necessary symbol if this constant uses a non-standard name on</span><br><span class="line">   your system. */</span></span><br><span class="line"><span class="comment">/* #undef PTHREAD_CREATE_JOINABLE */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 64bit enabled */</span></span><br><span class="line"><span class="comment">/* #undef SOLARIS_64BIT_ENABLED */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you have the ANSI C header files. */</span></span><br><span class="line"><span class="preprocessor">#define STDC_HEADERS 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Enable extensions on AIX 3, Interix.  */</span></span><br><span class="line"><span class="preprocessor">#ifndef _ALL_SOURCE</span></span><br><span class="line"><span class="preprocessor"># define _ALL_SOURCE 1</span></span><br><span class="line"><span class="preprocessor">#endif</span></span><br><span class="line"><span class="comment">/* Enable GNU extensions on systems that have them.  */</span></span><br><span class="line"><span class="preprocessor">#ifndef _GNU_SOURCE</span></span><br><span class="line"><span class="preprocessor"># define _GNU_SOURCE 1</span></span><br><span class="line"><span class="preprocessor">#endif</span></span><br><span class="line"><span class="comment">/* Enable threading extensions on Solaris.  */</span></span><br><span class="line"><span class="preprocessor">#ifndef _POSIX_PTHREAD_SEMANTICS</span></span><br><span class="line"><span class="preprocessor"># define _POSIX_PTHREAD_SEMANTICS 1</span></span><br><span class="line"><span class="preprocessor">#endif</span></span><br><span class="line"><span class="comment">/* Enable extensions on HP NonStop.  */</span></span><br><span class="line"><span class="preprocessor">#ifndef _TANDEM_SOURCE</span></span><br><span class="line"><span class="preprocessor"># define _TANDEM_SOURCE 1</span></span><br><span class="line"><span class="preprocessor">#endif</span></span><br><span class="line"><span class="comment">/* Enable general extensions on Solaris.  */</span></span><br><span class="line"><span class="preprocessor">#ifndef __EXTENSIONS__</span></span><br><span class="line"><span class="preprocessor"># define __EXTENSIONS__ 1</span></span><br><span class="line"><span class="preprocessor">#endif</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Version number of package */</span></span><br><span class="line"><span class="preprocessor">#define VERSION "3.0.0-alpha-3"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if on MINIX. */</span></span><br><span class="line"><span class="comment">/* #undef _MINIX */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 2 if the system does not provide POSIX.1 features except with</span><br><span class="line">   this defined. */</span></span><br><span class="line"><span class="comment">/* #undef _POSIX_1_SOURCE */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* Define to 1 if you need to in order for `stat' and other things to work. */</span></span><br><span class="line"><span class="comment">/* #undef _POSIX_SOURCE */</span></span><br></pre></td></tr></table></figure></p>
+<p>pbconfig.h内容如下<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hexcolor">#def</span>ine GOOGLE_PROTOBUF_HASH_MAP_CLASS unordered_map</span><br><span class="line"><span class="hexcolor">#def</span>ine GOOGLE_PROTOBUF_HASH_MAP_H &lt;tr1/unordered_map&gt;</span><br><span class="line"><span class="hexcolor">#def</span>ine GOOGLE_PROTOBUF_HASH_NAMESPACE std::tr1</span><br><span class="line"><span class="hexcolor">#def</span>ine GOOGLE_PROTOBUF_HASH_SET_CLASS unordered_set</span><br><span class="line"><span class="hexcolor">#def</span>ine GOOGLE_PROTOBUF_HASH_SET_H &lt;tr1/unordered_set&gt;</span><br><span class="line"><span class="hexcolor">#def</span>ine GOOGLE_PROTOBUF_HAVE_HASH_MAP <span class="number">1</span></span><br><span class="line"><span class="hexcolor">#def</span>ine GOOGLE_PROTOBUF_HAVE_HASH_SET <span class="number">1</span></span><br></pre></td></tr></table></figure></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://transing.xyz/2015/07/23/build-protobuf-with-ndk-under-windows/" data-title="windows下使用ndk编译protobuf | 奇点2050" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/07/23/use-baidu-bos-for-ghost-0-6-4/" title="Ghost 0.6.4使用baidu bos存储图片">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Ghost 0.6.4使用baidu bos存储图片</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2015/07/23/build-grpc-with-ndk-under-windows/"  title="windows下使用ndk编译grpc">
+ <strong>下一篇：</strong><br/> 
+ <span>windows下使用ndk编译grpc
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/07/23/build-protobuf-with-ndk-under-windows/" data-title="windows下使用ndk编译protobuf" data-url="http://transing.xyz/2015/07/23/build-protobuf-with-ndk-under-windows/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ 
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://transing.duapp.com" target="_blank" title=" 本博客Ghost版本">奇点2050</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="Derek Quan">Derek Quan</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"transing"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1255716199'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s23.cnzz.com/z_stat.php%3Fid%3D1255716199' type='text/javascript'%3E%3C/script%3E"));</script>
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
