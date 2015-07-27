@@ -34,6 +34,7 @@
 <meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-uboot.JPG?responseContentDisposition=attachment">
 <meta property="og:image" content="http://transing.bj.bcebos.com/wifi-audio1.JPG">
 <meta property="og:image" content="http://transing.bj.bcebos.com/wifi-audio2.JPG">
+<meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-images.JPG?responseContentDisposition=attachment">
 <meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-flash1.JPG?responseContentDisposition=attachment">
 <meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-flash2.JPG?responseContentDisposition=attachment">
 <meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-flash4.JPG?responseContentDisposition=attachment">
@@ -41,7 +42,7 @@
 <meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-wifi-audio.JPG?responseContentDisposition=attachment">
 <meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-wifi-audio2.JPG?responseContentDisposition=attachment">
 <meta property="og:image" content="http://transing.bj.bcebos.com/Screenshot_2015-07-27-22-35-42.png?responseContentDisposition=attachment">
-<meta property="og:updated_time" content="2015-07-27T14:43:48.310Z">
+<meta property="og:updated_time" content="2015-07-27T14:52:45.146Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="rt5350板上跑wifi audio">
 <meta name="twitter:description" content="1.下载编译源码1git clone https://github.com/qdk0901/openwrt-rt5350.git
@@ -129,7 +130,7 @@
 <h3 id="选择uboot">选择uboot</h3><p><img src="http://transing.bj.bcebos.com/rt5350-bootloader.JPG?responseContentDisposition=attachment" alt=""><br><img src="http://transing.bj.bcebos.com/rt5350-uboot.JPG?responseContentDisposition=attachment" alt=""></p>
 <h3 id="选择wifi_audio">选择wifi audio</h3><p><img src="http://transing.bj.bcebos.com/wifi-audio1.JPG" alt=""><br><img src="http://transing.bj.bcebos.com/wifi-audio2.JPG" alt=""></p>
 <h3 id="编译源码">编译源码</h3><figure class="highlight fix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">make -j8 V</span>=<span class="string">s</span></span><br></pre></td></tr></table></figure>
-<h3 id="得到镜像如下">得到镜像如下</h3><h4 id="其中openwrt-ramips-rt305x-sxx-u-boot-bin为uboot">其中openwrt-ramips-rt305x-sxx-u-boot.bin为uboot</h4><h4 id="openwrt-ramips-rt305x-sxx-squashfs-sysupgrade-bin为linux">openwrt-ramips-rt305x-sxx-squashfs-sysupgrade.bin为linux</h4><p>![](<a href="http://transing.bj.bcebos.com/rt5350-images.JPG?responseContentDisposition=attachment" target="_blank" rel="external">http://transing.bj.bcebos.com/rt5350-images.JPG?responseContentDisposition=attachment</a></p>
+<h3 id="得到镜像如下">得到镜像如下</h3><h4 id="其中openwrt-ramips-rt305x-sxx-u-boot-bin为uboot">其中openwrt-ramips-rt305x-sxx-u-boot.bin为uboot</h4><h4 id="openwrt-ramips-rt305x-sxx-squashfs-sysupgrade-bin为linux">openwrt-ramips-rt305x-sxx-squashfs-sysupgrade.bin为linux</h4><p><img src="http://transing.bj.bcebos.com/rt5350-images.JPG?responseContentDisposition=attachment" alt=""></p>
 <h2 id="2-刷入镜像">2.刷入镜像</h2><h4 id="首先，需要刷入uboot，如果你的板已经烧录过uboot，可以用那个uboot的更新方式来更新本源码里的uboot，或者可以用烧录器，">首先，需要刷入uboot，如果你的板已经烧录过uboot，可以用那个uboot的更新方式来更新本源码里的uboot，或者可以用烧录器，</h4><h4 id="已经刷了本原码的uboot的板，按照下面的方式刷入linux即可">已经刷了本原码的uboot的板，按照下面的方式刷入linux即可</h4><h5 id="tftp64目录如下">tftp64目录如下</h5><p><img src="http://transing.bj.bcebos.com/rt5350-flash1.JPG?responseContentDisposition=attachment" alt=""></p>
 <h5 id="网卡配置如下">网卡配置如下</h5><p><img src="http://transing.bj.bcebos.com/rt5350-flash2.JPG?responseContentDisposition=attachment" alt=""></p>
 <h5 id="uboot串口波特率设置为115200,rt5350板用网线根板相连后，在串口输入run_ll命令">uboot串口波特率设置为115200,rt5350板用网线根板相连后，在串口输入run ll命令</h5><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">run</span> <span class="bash">ll</span></span><br></pre></td></tr></table></figure>
