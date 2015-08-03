@@ -39,10 +39,11 @@
 <meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-flash2.JPG?responseContentDisposition=attachment">
 <meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-flash4.JPG?responseContentDisposition=attachment">
 <meta property="og:image" content="http://transing.bj.bcebos.com/IMG_20150727_222954.jpg?responseContentDisposition=attachment">
+<meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-i2s.jpg?responseContentDisposition=attachment">
 <meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-wifi-audio.JPG?responseContentDisposition=attachment">
 <meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-wifi-audio2.JPG?responseContentDisposition=attachment">
 <meta property="og:image" content="http://transing.bj.bcebos.com/Screenshot_2015-07-27-22-35-42.png?responseContentDisposition=attachment">
-<meta property="og:updated_time" content="2015-07-27T14:52:45.146Z">
+<meta property="og:updated_time" content="2015-08-03T08:04:07.847Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="rt5350板上跑wifi audio">
 <meta name="twitter:description" content="1.下载编译源码1git clone https://github.com/qdk0901/openwrt-rt5350.git
@@ -136,6 +137,7 @@
 <h5 id="uboot串口波特率设置为115200,rt5350板用网线根板相连后，在串口输入run_ll命令">uboot串口波特率设置为115200,rt5350板用网线根板相连后，在串口输入run ll命令</h5><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">run</span> <span class="bash">ll</span></span><br></pre></td></tr></table></figure>
 <p><img src="http://transing.bj.bcebos.com/rt5350-flash4.JPG?responseContentDisposition=attachment" alt=""><br>等待下载刷写完毕</p>
 <h2 id="3-测试wifi_audio">3.测试wifi audio</h2><h3 id="接入usb声卡，如下图">接入usb声卡，如下图</h3><p><img src="http://transing.bj.bcebos.com/IMG_20150727_222954.jpg?responseContentDisposition=attachment" alt=""></p>
+<h3 id="接入i2s声卡测试，如下图">接入i2s声卡测试，如下图</h3><p><img src="http://transing.bj.bcebos.com/rt5350-i2s.jpg?responseContentDisposition=attachment" alt=""></p>
 <h3 id="正常的话，/dev/snd下应该有如下设备">正常的话，/dev/snd下应该有如下设备</h3><p><img src="http://transing.bj.bcebos.com/rt5350-wifi-audio.JPG?responseContentDisposition=attachment" alt=""></p>
 <h3 id="执行如下命令">执行如下命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gmediarender <span class="operator">-f</span> sxx-wifi-audio</span><br></pre></td></tr></table></figure>
 <p><img src="http://transing.bj.bcebos.com/rt5350-wifi-audio2.JPG?responseContentDisposition=attachment" alt=""></p>
