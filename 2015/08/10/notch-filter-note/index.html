@@ -4,36 +4,31 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>HVSP for attiny-85 | 奇点2050</title>
+    <title>双T型滤波器笔记 | 奇点2050</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="transinger">
     
 
     
-    <meta name="description" content="Digispark出品的attiny85的小板子，只有6个IO可以用，其中PB5是RESET脚，
-这个脚默认不能当做正常IO使用，如果需要做IO用，就需要通过ISP把RSTDISBL这个fuse位勾上
-但是一旦勾上这个fuse位，ISP将不能再写入attiny85，这时候就需要用HVSP(高电压串行编程)把fuse重写。1.HVSP的原理图如下
-2.上面图里有一个12V电压需要提供，可以在淘宝上买">
+    <meta name="description" content="1.双T Notch滤波器的原理图如下
+2.由以上电路可以得到方程如下1234567由电路得到方程如下(X-v1)*s*C - (v1-Z)/R = (v1-v2)*s*C(X-v3)/(2R) + (v2-v3)/(2R)=v3*2*s*C(v1-v2)*s*C = (v2 - v3)/(2R)v2 = Z/(1+m)用maple解方程得solve(&amp;#123;v2 = Y/(m+1), (-v">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HVSP for attiny-85">
-<meta property="og:url" content="http://transing.xyz/2015/08/10/HVSP-for-attiny-85/index.html">
+<meta property="og:title" content="双T型滤波器笔记">
+<meta property="og:url" content="http://transing.xyz/2015/08/10/notch-filter-note/index.html">
 <meta property="og:site_name" content="奇点2050">
-<meta property="og:description" content="Digispark出品的attiny85的小板子，只有6个IO可以用，其中PB5是RESET脚，
-这个脚默认不能当做正常IO使用，如果需要做IO用，就需要通过ISP把RSTDISBL这个fuse位勾上
-但是一旦勾上这个fuse位，ISP将不能再写入attiny85，这时候就需要用HVSP(高电压串行编程)把fuse重写。1.HVSP的原理图如下
-2.上面图里有一个12V电压需要提供，可以在淘宝上买">
-<meta property="og:image" content="http://transing.bj.bcebos.com/image/digispark-tiny85.png?responseContentDisposition=attachment">
-<meta property="og:image" content="http://transing.bj.bcebos.com/image/tiny85-fuse.png?responseContentDisposition=attachment">
-<meta property="og:image" content="http://transing.bj.bcebos.com/image/diagram-570x283.png?responseContentDisposition=attachment">
-<meta property="og:image" content="http://transing.bj.bcebos.com/image/hvsp.jpg?responseContentDisposition=attachment">
-<meta property="og:updated_time" content="2015-08-10T07:16:51.173Z">
+<meta property="og:description" content="1.双T Notch滤波器的原理图如下
+2.由以上电路可以得到方程如下1234567由电路得到方程如下(X-v1)*s*C - (v1-Z)/R = (v1-v2)*s*C(X-v3)/(2R) + (v2-v3)/(2R)=v3*2*s*C(v1-v2)*s*C = (v2 - v3)/(2R)v2 = Z/(1+m)用maple解方程得solve(&amp;#123;v2 = Y/(m+1), (-v">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/tween-t-notch.png?responseContentDisposition=attachment">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/resolve-notch.png?responseContentDisposition=attachment">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/notch-transfer-function.png?responseContentDisposition=attachment">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/notch-filter-response.png?responseContentDisposition=attachment">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/notch-filter-multisim.png?responseContentDisposition=attachment">
+<meta property="og:updated_time" content="2015-08-10T07:30:21.732Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HVSP for attiny-85">
-<meta name="twitter:description" content="Digispark出品的attiny85的小板子，只有6个IO可以用，其中PB5是RESET脚，
-这个脚默认不能当做正常IO使用，如果需要做IO用，就需要通过ISP把RSTDISBL这个fuse位勾上
-但是一旦勾上这个fuse位，ISP将不能再写入attiny85，这时候就需要用HVSP(高电压串行编程)把fuse重写。1.HVSP的原理图如下
-2.上面图里有一个12V电压需要提供，可以在淘宝上买">
+<meta name="twitter:title" content="双T型滤波器笔记">
+<meta name="twitter:description" content="1.双T Notch滤波器的原理图如下
+2.由以上电路可以得到方程如下1234567由电路得到方程如下(X-v1)*s*C - (v1-Z)/R = (v1-v2)*s*C(X-v3)/(2R) + (v2-v3)/(2R)=v3*2*s*C(v1-v2)*s*C = (v2 - v3)/(2R)v2 = Z/(1+m)用maple解方程得solve(&amp;#123;v2 = Y/(m+1), (-v">
 
     
     <link rel="alternative" href="/atom.xml" title="奇点2050" type="application/atom+xml">
@@ -93,24 +88,26 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/08/10/HVSP-for-attiny-85/" title="HVSP for attiny-85" itemprop="url">HVSP for attiny-85</a>
+      <a href="/2015/08/10/notch-filter-note/" title="双T型滤波器笔记" itemprop="url">双T型滤波器笔记</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="transinger" target="_blank" itemprop="author">transinger</a>
 		
   <p class="article-time">
-    <time datetime="2015-08-10T07:00:05.000Z" itemprop="datePublished"> 发表于 2015-08-10</time>
+    <time datetime="2015-08-10T07:21:24.000Z" itemprop="datePublished"> 发表于 2015-08-10</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<h2 id="Digispark出品的attiny85的小板子，只有6个IO可以用，其中PB5是RESET脚，">Digispark出品的attiny85的小板子，只有6个IO可以用，其中PB5是RESET脚，</h2><p><img src="http://transing.bj.bcebos.com/image/digispark-tiny85.png?responseContentDisposition=attachment" alt=""></p>
-<h2 id="这个脚默认不能当做正常IO使用，如果需要做IO用，就需要通过ISP把RSTDISBL这个fuse位勾上">这个脚默认不能当做正常IO使用，如果需要做IO用，就需要通过ISP把RSTDISBL这个fuse位勾上</h2><p><img src="http://transing.bj.bcebos.com/image/tiny85-fuse.png?responseContentDisposition=attachment" alt=""></p>
-<h2 id="但是一旦勾上这个fuse位，ISP将不能再写入attiny85，这时候就需要用HVSP(高电压串行编程)把fuse重写。">但是一旦勾上这个fuse位，ISP将不能再写入attiny85，这时候就需要用HVSP(高电压串行编程)把fuse重写。</h2><h2 id="1-HVSP的原理图如下">1.HVSP的原理图如下</h2><p><img src="http://transing.bj.bcebos.com/image/diagram-570x283.png?responseContentDisposition=attachment" alt=""></p>
-<h2 id="2-上面图里有一个12V电压需要提供，可以在淘宝上买5V转12V的模块">2.上面图里有一个12V电压需要提供，可以在淘宝上买5V转12V的模块</h2><h2 id="3-arduino代码参考这里">3.arduino代码参考<a href="http://www.rickety.us/wp-content/uploads/2010/03/hv_serial_prog.pde" target="_blank" rel="external">这里</a></h2><h2 id="4-最后成品如下">4.最后成品如下</h2><p><img src="http://transing.bj.bcebos.com/image/hvsp.jpg?responseContentDisposition=attachment" alt=""></p>
-<h2 id="5-将从板上取下来的attiny85通过编程器座子放到HVSP上，运行arduino程序，然后在arduino串口控制台敲回车键就可以完成对fuse的重写">5.将从板上取下来的attiny85通过编程器座子放到HVSP上，运行arduino程序，然后在arduino串口控制台敲回车键就可以完成对fuse的重写</h2>  
+		<h2 id="1-双T_Notch滤波器的原理图如下">1.双T Notch滤波器的原理图如下</h2><p><img src="http://transing.bj.bcebos.com/image/tween-t-notch.png?responseContentDisposition=attachment" alt=""></p>
+<h2 id="2-由以上电路可以得到方程如下">2.由以上电路可以得到方程如下</h2><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">由电路得到方程如下</span><br><span class="line">(X-<span class="literal">v1</span>)*s*C - (<span class="literal">v1</span>-Z)/R = (<span class="literal">v1</span>-<span class="literal">v2</span>)*s*C</span><br><span class="line">(X-<span class="literal">v3</span>)/(<span class="number">2</span>R) + (<span class="literal">v2</span>-<span class="literal">v3</span>)/(<span class="number">2</span>R)<span class="label">=v3</span>*<span class="number">2</span>*s*C</span><br><span class="line">(<span class="literal">v1</span>-<span class="literal">v2</span>)*s*C = (<span class="literal">v2</span> - <span class="literal">v3</span>)/(<span class="number">2</span>R)</span><br><span class="line"><span class="label">v2</span> = Z/(<span class="number">1</span>+m)</span><br><span class="line">用maple解方程得</span><br><span class="line"><span class="label">solve</span>(&#123;<span class="literal">v2</span> = Y/(m+<span class="number">1</span>), (-<span class="literal">v2</span>+<span class="literal">v1</span>)*s*C = (<span class="literal">v2</span>-<span class="literal">v3</span>)/(<span class="number">2</span>*R), (X-<span class="literal">v3</span>)/(<span class="number">2</span>*R)+(<span class="literal">v2</span>-<span class="literal">v3</span>)/(<span class="number">2</span>*R) = <span class="number">2</span>*<span class="literal">v3</span>*s*C, (X-<span class="literal">v1</span>)*s*C-(-<span class="literal">v2</span>+<span class="literal">v1</span>)*s*C = (<span class="literal">v1</span>-Y)/R&#125;, &#123;Y, <span class="literal">v1</span>, <span class="literal">v2</span>, <span class="literal">v3</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>用maple解方程:)<br><img src="http://transing.bj.bcebos.com/image/resolve-notch.png?responseContentDisposition=attachment" alt=""></p>
+<h2 id="3-得到双T_Notch滤波器的转移函数">3.得到双T Notch滤波器的转移函数</h2><p>sys := TransferFunction((s^2+(1/(2<em>RC))^2)</em>(m+1)/(s^2+(1-m)<em>s/RC+1/(2</em>RC)^2))<br><img src="http://transing.bj.bcebos.com/image/notch-transfer-function.png?responseContentDisposition=attachment" alt=""></p>
+<h3 id="Wc_=_1/RC_=_314_（注意，这个是角速度）">Wc = 1/RC = 314 （注意，这个是角速度）</h3><h3 id="fc_=_1/(2piRC)_=_100Hz">fc = 1/(2<em>pi</em>RC) = 100Hz</h3><h3 id="m_=_0-9">m = 0.9</h3><h3 id="时幅频响应为">时幅频响应为</h3><p><img src="http://transing.bj.bcebos.com/image/notch-filter-response.png?responseContentDisposition=attachment" alt=""></p>
+<h2 id="4-最后上Multisim的仿真结果">4.最后上Multisim的仿真结果</h2><p><img src="http://transing.bj.bcebos.com/image/notch-filter-multisim.png?responseContentDisposition=attachment" alt=""></p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -122,7 +119,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://transing.xyz/2015/08/10/HVSP-for-attiny-85/" data-title="HVSP for attiny-85 | 奇点2050" data-tsina="null" class="share clearfix">
+	  <div data-url="http://transing.xyz/2015/08/10/notch-filter-note/" data-title="双T型滤波器笔记 | 奇点2050" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -135,19 +132,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/08/10/notch-filter-note/" title="双T型滤波器笔记">
-  <strong>上一篇：</strong><br/>
-  <span>
-  双T型滤波器笔记</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/08/03/native-webif-for-android/"  title="native webif for android">
+<a href="/2015/08/10/HVSP-for-attiny-85/"  title="HVSP for attiny-85">
  <strong>下一篇：</strong><br/> 
- <span>native webif for android
+ <span>HVSP for attiny-85
 </span>
 </a>
 </div>
@@ -156,7 +145,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/08/10/HVSP-for-attiny-85/" data-title="HVSP for attiny-85" data-url="http://transing.xyz/2015/08/10/HVSP-for-attiny-85/"></div>
+	<div class="ds-thread" data-thread-key="2015/08/10/notch-filter-note/" data-title="双T型滤波器笔记" data-url="http://transing.xyz/2015/08/10/notch-filter-note/"></div>
 </section>
 
 
