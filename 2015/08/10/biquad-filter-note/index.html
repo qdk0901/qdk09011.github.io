@@ -1,0 +1,436 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>biquad滤波器笔记 | 奇点2050</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="transinger">
+    
+
+    
+    <meta name="description" content="Biquad滤波器用在参数化EQ中，属于双二次滤波器，Biquad滤波器的转移函数如下1H(z) = (b0 + b1 * z^-1 + b2 * z^-2) / (a0 + a1 * z^-1 + a2 * z^-2)
+用maple求得biquad滤波器的幅值表达式如下
+定义A W0 Alpha如下,其中Fc是中心频率，Fs是采样频率，
+1234A = sqrt( 10 ^ (gain / 20">
+<meta property="og:type" content="article">
+<meta property="og:title" content="biquad滤波器笔记">
+<meta property="og:url" content="http://transing.xyz/2015/08/10/biquad-filter-note/index.html">
+<meta property="og:site_name" content="奇点2050">
+<meta property="og:description" content="Biquad滤波器用在参数化EQ中，属于双二次滤波器，Biquad滤波器的转移函数如下1H(z) = (b0 + b1 * z^-1 + b2 * z^-2) / (a0 + a1 * z^-1 + a2 * z^-2)
+用maple求得biquad滤波器的幅值表达式如下
+定义A W0 Alpha如下,其中Fc是中心频率，Fs是采样频率，
+1234A = sqrt( 10 ^ (gain / 20">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/biquad.png?responseContentDisposition=attachment">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/peakeq-g15.png?responseContentDisposition=attachment">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/peakeq-g5.png?responseContentDisposition=attachment">
+<meta property="og:updated_time" content="2015-08-10T13:30:52.771Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="biquad滤波器笔记">
+<meta name="twitter:description" content="Biquad滤波器用在参数化EQ中，属于双二次滤波器，Biquad滤波器的转移函数如下1H(z) = (b0 + b1 * z^-1 + b2 * z^-2) / (a0 + a1 * z^-1 + a2 * z^-2)
+用maple求得biquad滤波器的幅值表达式如下
+定义A W0 Alpha如下,其中Fc是中心频率，Fs是采样频率，
+1234A = sqrt( 10 ^ (gain / 20">
+
+    
+    <link rel="alternative" href="/atom.xml" title="奇点2050" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="奇点2050" title="奇点2050"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="奇点2050">奇点2050</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页|Home</a></li>
+					
+						<li><a href="/archives">归档|Archives</a></li>
+					
+						<li><a href="/about">关于|About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:transing.xyz">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/08/10/biquad-filter-note/" title="biquad滤波器笔记" itemprop="url">biquad滤波器笔记</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="transinger" target="_blank" itemprop="author">transinger</a>
+		
+  <p class="article-time">
+    <time datetime="2015-08-10T12:00:54.000Z" itemprop="datePublished"> 发表于 2015-08-10</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Biquad滤波器用在参数化EQ中，属于双二次滤波器，Biquad滤波器的转移函数如下"><span class="toc-number">1.</span> <span class="toc-text">Biquad滤波器用在参数化EQ中，属于双二次滤波器，Biquad滤波器的转移函数如下</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PeakEQ的拉布拉斯域的转移函数如下"><span class="toc-number">2.</span> <span class="toc-text">PeakEQ的拉布拉斯域的转移函数如下</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#来看一看PeakEQ的幅频响应，matlab程序如下"><span class="toc-number">3.</span> <span class="toc-text">来看一看PeakEQ的幅频响应，matlab程序如下</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#结果如下"><span class="toc-number">3.0.1.</span> <span class="toc-text">结果如下</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#增益为15时"><span class="toc-number">3.0.1.1.</span> <span class="toc-text">增益为15时</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#增益为5时"><span class="toc-number">3.0.1.2.</span> <span class="toc-text">增益为5时</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考资料"><span class="toc-number">3.1.</span> <span class="toc-text">参考资料</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<h2 id="Biquad滤波器用在参数化EQ中，属于双二次滤波器，Biquad滤波器的转移函数如下">Biquad滤波器用在参数化EQ中，属于双二次滤波器，Biquad滤波器的转移函数如下</h2><figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">H<span class="list">(<span class="keyword">z</span>)</span> = <span class="list">(<span class="keyword">b0</span> + b1 <span class="variable">* z^-1 + b2 *</span> z^<span class="number">-2</span>)</span> / <span class="list">(<span class="keyword">a0</span> + a1 <span class="variable">* z^-1 + a2 *</span> z^<span class="number">-2</span>)</span></span><br></pre></td></tr></table></figure>
+<p>用maple求得biquad滤波器的幅值表达式如下<br><img src="http://transing.bj.bcebos.com/image/biquad.png?responseContentDisposition=attachment" alt=""></p>
+<p>定义A W0 Alpha如下,其中Fc是中心频率，Fs是采样频率，</p>
+<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">A = <span class="built_in">sqrt</span><span class="params">( <span class="number">10</span> ^ <span class="params">(gain / <span class="number">20</span>)</span>)</span> </span><br><span class="line">   = <span class="number">10</span> ^ <span class="params">(gain / <span class="number">40</span>)</span></span><br><span class="line">w0 = <span class="number">2</span> <span class="built_in">*</span> pi <span class="built_in">*</span> Fc / Fs</span><br><span class="line">alpha = <span class="built_in">sin</span><span class="params">(w0)</span> / <span class="params">(<span class="number">2</span> * Q)</span></span><br></pre></td></tr></table></figure>
+<h2 id="PeakEQ的拉布拉斯域的转移函数如下">PeakEQ的拉布拉斯域的转移函数如下</h2><figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">H<span class="comment">(s)</span> = <span class="comment">(s^2 + s * (A / Q)</span> + <span class="number">1</span>)  /  <span class="comment">(s^2 + s * (A * Q)</span> + <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>得到z域下b0 b1 b2 a0 a1 a2的表达式如下(参考资料里有推导，我还没看懂)<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">b0 = <span class="value"><span class="number">1</span> + alpha * A</span></span></span><br><span class="line"><span class="setting">b1 = <span class="value">-<span class="number">2</span> * cos(w0)</span></span></span><br><span class="line"><span class="setting">b2 = <span class="value"><span class="number">1</span> - alpha * A</span></span></span><br><span class="line"><span class="setting">a0 = <span class="value"><span class="number">1</span> + alpha / A</span></span></span><br><span class="line"><span class="setting">a1 = <span class="value">-<span class="number">2</span> * cos(w0)</span></span></span><br><span class="line"><span class="setting">a2 = <span class="value"><span class="number">1</span> - alpha / A</span></span></span><br></pre></td></tr></table></figure></p>
+<h2 id="来看一看PeakEQ的幅频响应，matlab程序如下">来看一看PeakEQ的幅频响应，matlab程序如下</h2><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">Fs = 48000</span><br><span class="line">Fc = 10000</span><br><span class="line">Q = 10.0</span><br><span class="line">G = 5.0</span><br><span class="line"></span><br><span class="line">A = 10.^ (G./ 40)</span><br><span class="line">W0 = 2.<span class="keyword">*</span> pi.<span class="keyword">*</span> Fc./ Fs</span><br><span class="line">alpha = sin(W0)./ (2.<span class="keyword">*</span> Q)</span><br><span class="line">f = 0:1:Fs./2</span><br><span class="line">w = 2.<span class="keyword">*</span>pi.<span class="keyword">*</span> f./ Fs</span><br><span class="line">phi = cos(w)</span><br><span class="line"></span><br><span class="line">b0 = 1 + alpha.<span class="keyword">*</span> A</span><br><span class="line">b1 = -2.<span class="keyword">*</span> cos(W0)</span><br><span class="line">b2 = 1 - alpha.<span class="keyword">*</span> A</span><br><span class="line">a0 = 1 + alpha / A</span><br><span class="line">a1 = -2.<span class="keyword">*</span> cos(W0)</span><br><span class="line">a2 = 1 - alpha./ A</span><br><span class="line">yb = 4.<span class="keyword">*</span> phi.<span class="keyword">*</span> phi.<span class="keyword">*</span> b0.<span class="keyword">*</span> b2 + 2.<span class="keyword">*</span> phi.<span class="keyword">*</span> b0.<span class="keyword">*</span> b1 + 2.<span class="keyword">*</span> phi.<span class="keyword">*</span> b1.<span class="keyword">*</span> b2 + b0.<span class="keyword">*</span> b0 - 2.<span class="keyword">*</span> b0.<span class="keyword">*</span> b2 + b1.<span class="keyword">*</span> b1 + b2.<span class="keyword">*</span> b2</span><br><span class="line">ya = 4.<span class="keyword">*</span> phi.<span class="keyword">*</span> phi.<span class="keyword">*</span> a0.<span class="keyword">*</span> a2 + 2.<span class="keyword">*</span> phi.<span class="keyword">*</span> a0.<span class="keyword">*</span> a1 + 2.<span class="keyword">*</span> phi.<span class="keyword">*</span> a1.<span class="keyword">*</span> a2 + a0.<span class="keyword">*</span> a0 - 2.<span class="keyword">*</span> a0.<span class="keyword">*</span> a2 + a1.<span class="keyword">*</span> a1 + a2.<span class="keyword">*</span> a2</span><br><span class="line">y = 10.<span class="keyword">*</span> log (yb./ ya)</span><br><span class="line"></span><br><span class="line">plot(f, y)</span><br><span class="line">legend(sprintf('Fc = %d, Q = %d, G = %d', Fc, Q, G))</span><br><span class="line">xlabel('Frequency(Hz)')</span><br><span class="line">ylabel('Amptitude(dB)')</span><br><span class="line">axis([0,48000,0,100])</span><br></pre></td></tr></table></figure>
+<h4 id="结果如下">结果如下</h4><h5 id="增益为15时">增益为15时</h5><p><img src="http://transing.bj.bcebos.com/image/peakeq-g15.png?responseContentDisposition=attachment" alt=""></p>
+<h5 id="增益为5时">增益为5时</h5><p><img src="http://transing.bj.bcebos.com/image/peakeq-g5.png?responseContentDisposition=attachment" alt=""></p>
+<h3 id="参考资料">参考资料</h3><p>1.<a href="http://www.musicdsp.org/files/Audio-EQ-Cookbook.txt" target="_blank" rel="external">Audio-EQ-Cookbook</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://transing.xyz/2015/08/10/biquad-filter-note/" data-title="biquad滤波器笔记 | 奇点2050" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/08/10/notch-filter-note/"  title="双T型滤波器笔记">
+ <strong>下一篇：</strong><br/> 
+ <span>双T型滤波器笔记
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2015/08/10/biquad-filter-note/" data-title="biquad滤波器笔记" data-url="http://transing.xyz/2015/08/10/biquad-filter-note/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Biquad滤波器用在参数化EQ中，属于双二次滤波器，Biquad滤波器的转移函数如下"><span class="toc-number">1.</span> <span class="toc-text">Biquad滤波器用在参数化EQ中，属于双二次滤波器，Biquad滤波器的转移函数如下</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PeakEQ的拉布拉斯域的转移函数如下"><span class="toc-number">2.</span> <span class="toc-text">PeakEQ的拉布拉斯域的转移函数如下</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#来看一看PeakEQ的幅频响应，matlab程序如下"><span class="toc-number">3.</span> <span class="toc-text">来看一看PeakEQ的幅频响应，matlab程序如下</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#结果如下"><span class="toc-number">3.0.1.</span> <span class="toc-text">结果如下</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#增益为15时"><span class="toc-number">3.0.1.1.</span> <span class="toc-text">增益为15时</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#增益为5时"><span class="toc-number">3.0.1.2.</span> <span class="toc-text">增益为5时</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考资料"><span class="toc-number">3.1.</span> <span class="toc-text">参考资料</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://transing.duapp.com" target="_blank" title=" 本博客Ghost版本">奇点2050</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="transinger">transinger</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"transing"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1255862800'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s23.cnzz.com/z_stat.php%3Fid%3D1255862800' type='text/javascript'%3E%3C/script%3E"));</script>
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
