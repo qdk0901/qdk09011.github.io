@@ -4,24 +4,36 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>native webif for android | 奇点2050</title>
+    <title>HVSP for attiny-85 | 奇点2050</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="transinger">
     
 
     
-    <meta name="description" content="1.This code is compiling under android source environment defaultly2.Testing 1234adb shell mkdir /data/webifadb push webif/ /data/webif   // push the html stuffs into android deviceadb push out/target">
+    <meta name="description" content="Digispark出品的attiny85的小板子，只有6个IO可以用，其中PB5是RESET脚，
+这个脚默认不能当做正常IO使用，如果需要做IO用，就需要通过ISP把RSTDISBL这个fuse位勾上
+但是一旦勾上这个fuse位，ISP将不能再写入attiny85，这时候就需要用HVSP(高电压串行编程)把fuse重写。1.HVSP的原理图如下
+2.上面图里有一个12V电压需要提供，可以在淘宝上买">
 <meta property="og:type" content="article">
-<meta property="og:title" content="native webif for android">
-<meta property="og:url" content="http://transing.xyz/2015/08/03/native-webif-for-android/index.html">
+<meta property="og:title" content="HVSP for attiny-85">
+<meta property="og:url" content="http://transing.xyz/2015/08/10/HVSP-for-attiny-85/index.html">
 <meta property="og:site_name" content="奇点2050">
-<meta property="og:description" content="1.This code is compiling under android source environment defaultly2.Testing 1234adb shell mkdir /data/webifadb push webif/ /data/webif   // push the html stuffs into android deviceadb push out/target">
-<meta property="og:image" content="http://transing.bj.bcebos.com/webif_test.png?responseContentDisposition=attachment">
-<meta property="og:updated_time" content="2015-08-03T10:09:28.173Z">
+<meta property="og:description" content="Digispark出品的attiny85的小板子，只有6个IO可以用，其中PB5是RESET脚，
+这个脚默认不能当做正常IO使用，如果需要做IO用，就需要通过ISP把RSTDISBL这个fuse位勾上
+但是一旦勾上这个fuse位，ISP将不能再写入attiny85，这时候就需要用HVSP(高电压串行编程)把fuse重写。1.HVSP的原理图如下
+2.上面图里有一个12V电压需要提供，可以在淘宝上买">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/digispark-tiny85.png?responseContentDisposition=attachment">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/tiny85-fuse.png?responseContentDisposition=attachment">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/diagram-570x283.png?responseContentDisposition=attachment">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/hvsp.jpg?responseContentDisposition=attachment">
+<meta property="og:updated_time" content="2015-08-10T07:16:51.173Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="native webif for android">
-<meta name="twitter:description" content="1.This code is compiling under android source environment defaultly2.Testing 1234adb shell mkdir /data/webifadb push webif/ /data/webif   // push the html stuffs into android deviceadb push out/target">
+<meta name="twitter:title" content="HVSP for attiny-85">
+<meta name="twitter:description" content="Digispark出品的attiny85的小板子，只有6个IO可以用，其中PB5是RESET脚，
+这个脚默认不能当做正常IO使用，如果需要做IO用，就需要通过ISP把RSTDISBL这个fuse位勾上
+但是一旦勾上这个fuse位，ISP将不能再写入attiny85，这时候就需要用HVSP(高电压串行编程)把fuse重写。1.HVSP的原理图如下
+2.上面图里有一个12V电压需要提供，可以在淘宝上买">
 
     
     <link rel="alternative" href="/atom.xml" title="奇点2050" type="application/atom+xml">
@@ -81,30 +93,24 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/08/03/native-webif-for-android/" title="native webif for android" itemprop="url">native webif for android</a>
+      <a href="/2015/08/10/HVSP-for-attiny-85/" title="HVSP for attiny-85" itemprop="url">HVSP for attiny-85</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="transinger" target="_blank" itemprop="author">transinger</a>
 		
   <p class="article-time">
-    <time datetime="2015-08-03T10:08:36.000Z" itemprop="datePublished"> 发表于 2015-08-03</time>
+    <time datetime="2015-08-10T07:00:05.000Z" itemprop="datePublished"> 发表于 2015-08-10</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<div id="toc" class="toc-article">
-			<strong class="toc-title">文章目录</strong>
-		
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-This_code_is_compiling_under_android_source_environment_defaultly"><span class="toc-number">1.</span> <span class="toc-text">1.This code is compiling under android source environment defaultly</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Testing"><span class="toc-number">2.</span> <span class="toc-text">2.Testing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Open_a_web_browser,_and_type_in"><span class="toc-number">3.</span> <span class="toc-text">3.Open a web browser, and type in</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Here_is_the_demo,_click_the_button,_a_request_will_send_to_webif_server_in_the_android_device,_and_the_reply_from_webif_will_be_alerted"><span class="toc-number">4.</span> <span class="toc-text">4.Here is the demo, click the button, a request will send to webif server in the android device, and the reply from webif will be alerted</span></a></li></ol>
-		
-		</div>
-		
-		<h2 id="1-This_code_is_compiling_under_android_source_environment_defaultly">1.This code is compiling under android source environment defaultly</h2><h2 id="2-Testing">2.Testing</h2> <figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">adb</span> shell mkdir /<span class="preprocessor">data</span>/webif</span><br><span class="line"><span class="label">adb</span> <span class="keyword">push </span>webif/ /<span class="preprocessor">data</span>/webif   // <span class="keyword">push </span>the html stuffs into <span class="keyword">android </span>device</span><br><span class="line"><span class="label">adb</span> <span class="keyword">push </span>out/target/product/xxxx/system/<span class="keyword">bin/webif </span>system/<span class="keyword">bin/ </span> //<span class="keyword">push </span>the webif <span class="keyword">binary </span>into <span class="keyword">android </span>device</span><br><span class="line"><span class="label">adb</span> shell webif  // run the webif</span><br></pre></td></tr></table></figure>
-<h2 id="3-Open_a_web_browser,_and_type_in">3.Open a web browser, and type in</h2> <figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">http</span>://&lt;<span class="keyword">android </span>device <span class="literal">ip</span>&gt;/webif/index.html</span><br></pre></td></tr></table></figure>
-<h2 id="4-Here_is_the_demo,_click_the_button,_a_request_will_send_to_webif_server_in_the_android_device,_and_the_reply_from_webif_will_be_alerted">4.Here is the demo, click the button, a request will send to webif server in the android device, and the reply from webif will be alerted</h2><p> <img src="http://transing.bj.bcebos.com/webif_test.png?responseContentDisposition=attachment" alt=""></p>
-  
+		<h2 id="Digispark出品的attiny85的小板子，只有6个IO可以用，其中PB5是RESET脚，">Digispark出品的attiny85的小板子，只有6个IO可以用，其中PB5是RESET脚，</h2><p><img src="http://transing.bj.bcebos.com/image/digispark-tiny85.png?responseContentDisposition=attachment" alt=""></p>
+<h2 id="这个脚默认不能当做正常IO使用，如果需要做IO用，就需要通过ISP把RSTDISBL这个fuse位勾上">这个脚默认不能当做正常IO使用，如果需要做IO用，就需要通过ISP把RSTDISBL这个fuse位勾上</h2><p><img src="http://transing.bj.bcebos.com/image/tiny85-fuse.png?responseContentDisposition=attachment" alt=""></p>
+<h2 id="但是一旦勾上这个fuse位，ISP将不能再写入attiny85，这时候就需要用HVSP(高电压串行编程)把fuse重写。">但是一旦勾上这个fuse位，ISP将不能再写入attiny85，这时候就需要用HVSP(高电压串行编程)把fuse重写。</h2><h2 id="1-HVSP的原理图如下">1.HVSP的原理图如下</h2><p><img src="http://transing.bj.bcebos.com/image/diagram-570x283.png?responseContentDisposition=attachment" alt=""></p>
+<h2 id="2-上面图里有一个12V电压需要提供，可以在淘宝上买5V转12V的模块">2.上面图里有一个12V电压需要提供，可以在淘宝上买5V转12V的模块</h2><h2 id="3-arduino代码参考这里">3.arduino代码参考<a href="http://www.rickety.us/wp-content/uploads/2010/03/hv_serial_prog.pde" target="_blank" rel="external">这里</a></h2><h2 id="4-最后成品如下">4.最后成品如下</h2><p><img src="http://transing.bj.bcebos.com/image/hvsp.jpg?responseContentDisposition=attachment" alt=""></p>
+<h2 id="5-将从板上取下来的attiny85通过编程器座子放到HVSP上，运行arduino程序，然后在arduino串口控制台敲回车键就可以完成对fuse的重写">5.将从板上取下来的attiny85通过编程器座子放到HVSP上，运行arduino程序，然后在arduino串口控制台敲回车键就可以完成对fuse的重写</h2>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -116,7 +122,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://transing.xyz/2015/08/03/native-webif-for-android/" data-title="native webif for android | 奇点2050" data-tsina="null" class="share clearfix">
+	  <div data-url="http://transing.xyz/2015/08/10/HVSP-for-attiny-85/" data-title="HVSP for attiny-85 | 奇点2050" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -129,19 +135,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/08/10/HVSP-for-attiny-85/" title="HVSP for attiny-85">
-  <strong>上一篇：</strong><br/>
-  <span>
-  HVSP for attiny-85</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/07/27/wifi-audio-on-rt5350-with-openwrt/"  title="rt5350板上跑wifi audio">
+<a href="/2015/08/03/native-webif-for-android/"  title="native webif for android">
  <strong>下一篇：</strong><br/> 
- <span>rt5350板上跑wifi audio
+ <span>native webif for android
 </span>
 </a>
 </div>
@@ -150,19 +148,12 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/08/03/native-webif-for-android/" data-title="native webif for android" data-url="http://transing.xyz/2015/08/03/native-webif-for-android/"></div>
+	<div class="ds-thread" data-thread-key="2015/08/10/HVSP-for-attiny-85/" data-title="HVSP for attiny-85" data-url="http://transing.xyz/2015/08/10/HVSP-for-attiny-85/"></div>
 </section>
 
 
 </div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
-
-  <div id="toc" class="toc-aside">
-  <strong class="toc-title">文章目录</strong>
- 
- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-This_code_is_compiling_under_android_source_environment_defaultly"><span class="toc-number">1.</span> <span class="toc-text">1.This code is compiling under android source environment defaultly</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Testing"><span class="toc-number">2.</span> <span class="toc-text">2.Testing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Open_a_web_browser,_and_type_in"><span class="toc-number">3.</span> <span class="toc-text">3.Open a web browser, and type in</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Here_is_the_demo,_click_the_button,_a_request_will_send_to_webif_server_in_the_android_device,_and_the_reply_from_webif_will_be_alerted"><span class="toc-number">4.</span> <span class="toc-text">4.Here is the demo, click the button, a request will send to webif server in the android device, and the reply from webif will be alerted</span></a></li></ol>
- 
-  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -266,8 +257,6 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
