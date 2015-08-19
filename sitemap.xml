@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://transing.xyz/2015/08/19/openwrt-pcm-driver-on-mt7620-or-rt5350/</loc>
+    <lastmod>2015-08-19T03:11:37.792Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://transing.xyz/2015/08/10/biquad-filter-note/</loc>
     <lastmod>2015-08-10T13:35:10.019Z</lastmod>
   </url>
