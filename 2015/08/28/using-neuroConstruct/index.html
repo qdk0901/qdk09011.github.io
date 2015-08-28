@@ -4,55 +4,30 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>rt5350板上跑wifi audio | 奇点2050</title>
+    <title>在windows下使用neuroConstruct观看C线虫的神经模型 | 奇点2050</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="transinger">
     
 
     
-    <meta name="description" content="1.下载编译源码1git clone https://github.com/qdk0901/openwrt-rt5350.git
-更新feeds12./scripts/feeds update -a./scripts/feeds install -a
-选择目标板
-选择uboot
-选择wifi audio
-编译源码1make -j8 V=s
-得到镜像如下其中openwrt-ramips-rt305x">
+    <meta name="description" content="1.下载代码和编译编译之前，还需要安装一些工具，下面用choco来安装的12choco install svnchoco install ant
+安装完svn后，可能还需要将svn所在目录添加到环境变量中，在win10上，svn被安装到了C:\Program Files (x86)\Subversion\bin目录下，吧这个目录添加到PATH环境变量中就可以了
+从github下载代码并编译1234">
 <meta property="og:type" content="article">
-<meta property="og:title" content="rt5350板上跑wifi audio">
-<meta property="og:url" content="http://transing.xyz/2015/07/27/wifi-audio-on-rt5350-with-openwrt/index.html">
+<meta property="og:title" content="在windows下使用neuroConstruct观看C线虫的神经模型">
+<meta property="og:url" content="http://transing.xyz/2015/08/28/using-neuroConstruct/index.html">
 <meta property="og:site_name" content="奇点2050">
-<meta property="og:description" content="1.下载编译源码1git clone https://github.com/qdk0901/openwrt-rt5350.git
-更新feeds12./scripts/feeds update -a./scripts/feeds install -a
-选择目标板
-选择uboot
-选择wifi audio
-编译源码1make -j8 V=s
-得到镜像如下其中openwrt-ramips-rt305x">
-<meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-menuconfig.JPG">
-<meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-bootloader.JPG?responseContentDisposition=attachment">
-<meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-uboot.JPG?responseContentDisposition=attachment">
-<meta property="og:image" content="http://transing.bj.bcebos.com/wifi-audio1.JPG">
-<meta property="og:image" content="http://transing.bj.bcebos.com/wifi-audio2.JPG">
-<meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-images.JPG?responseContentDisposition=attachment">
-<meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-flash1.JPG?responseContentDisposition=attachment">
-<meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-flash2.JPG?responseContentDisposition=attachment">
-<meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-flash4.JPG?responseContentDisposition=attachment">
-<meta property="og:image" content="http://transing.bj.bcebos.com/IMG_20150727_222954.jpg?responseContentDisposition=attachment">
-<meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-i2s.jpg?responseContentDisposition=attachment">
-<meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-wifi-audio.JPG?responseContentDisposition=attachment">
-<meta property="og:image" content="http://transing.bj.bcebos.com/rt5350-wifi-audio2.JPG?responseContentDisposition=attachment">
-<meta property="og:image" content="http://transing.bj.bcebos.com/Screenshot_2015-07-27-22-35-42.png?responseContentDisposition=attachment">
-<meta property="og:updated_time" content="2015-08-25T01:57:04.632Z">
+<meta property="og:description" content="1.下载代码和编译编译之前，还需要安装一些工具，下面用choco来安装的12choco install svnchoco install ant
+安装完svn后，可能还需要将svn所在目录添加到环境变量中，在win10上，svn被安装到了C:\Program Files (x86)\Subversion\bin目录下，吧这个目录添加到PATH环境变量中就可以了
+从github下载代码并编译1234">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/celegans_neurons.png?responseContentDisposition=attachment">
+<meta property="og:updated_time" content="2015-08-28T04:35:22.579Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="rt5350板上跑wifi audio">
-<meta name="twitter:description" content="1.下载编译源码1git clone https://github.com/qdk0901/openwrt-rt5350.git
-更新feeds12./scripts/feeds update -a./scripts/feeds install -a
-选择目标板
-选择uboot
-选择wifi audio
-编译源码1make -j8 V=s
-得到镜像如下其中openwrt-ramips-rt305x">
+<meta name="twitter:title" content="在windows下使用neuroConstruct观看C线虫的神经模型">
+<meta name="twitter:description" content="1.下载代码和编译编译之前，还需要安装一些工具，下面用choco来安装的12choco install svnchoco install ant
+安装完svn后，可能还需要将svn所在目录添加到环境变量中，在win10上，svn被安装到了C:\Program Files (x86)\Subversion\bin目录下，吧这个目录添加到PATH环境变量中就可以了
+从github下载代码并编译1234">
 
     
     <link rel="alternative" href="/atom.xml" title="奇点2050" type="application/atom+xml">
@@ -112,37 +87,27 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/07/27/wifi-audio-on-rt5350-with-openwrt/" title="rt5350板上跑wifi audio" itemprop="url">rt5350板上跑wifi audio</a>
+      <a href="/2015/08/28/using-neuroConstruct/" title="在windows下使用neuroConstruct观看C线虫的神经模型" itemprop="url">在windows下使用neuroConstruct观看C线虫的神经模型</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="transinger" target="_blank" itemprop="author">transinger</a>
 		
   <p class="article-time">
-    <time datetime="2015-07-27T12:58:35.000Z" itemprop="datePublished"> 发表于 2015-07-27</time>
+    <time datetime="2015-08-28T04:22:03.000Z" itemprop="datePublished"> 发表于 2015-08-28</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<h2 id="1-下载编译源码">1.下载编译源码</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone <span class="string">https:</span><span class="comment">//github.com/qdk0901/openwrt-rt5350.git</span></span><br></pre></td></tr></table></figure>
-<h3 id="更新feeds">更新feeds</h3><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./scripts/feeds update -<span class="literal">a</span></span><br><span class="line">./scripts/feeds install -<span class="literal">a</span></span><br></pre></td></tr></table></figure>
-<h3 id="选择目标板">选择目标板</h3><p><img src="http://transing.bj.bcebos.com/rt5350-menuconfig.JPG" alt=""></p>
-<h3 id="选择uboot">选择uboot</h3><p><img src="http://transing.bj.bcebos.com/rt5350-bootloader.JPG?responseContentDisposition=attachment" alt=""><br><img src="http://transing.bj.bcebos.com/rt5350-uboot.JPG?responseContentDisposition=attachment" alt=""></p>
-<h3 id="选择wifi_audio">选择wifi audio</h3><p><img src="http://transing.bj.bcebos.com/wifi-audio1.JPG" alt=""><br><img src="http://transing.bj.bcebos.com/wifi-audio2.JPG" alt=""></p>
-<h3 id="编译源码">编译源码</h3><figure class="highlight fix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">make -j8 V</span>=<span class="string">s</span></span><br></pre></td></tr></table></figure>
-<h3 id="得到镜像如下">得到镜像如下</h3><h4 id="其中openwrt-ramips-rt305x-sxx-u-boot-bin为uboot">其中openwrt-ramips-rt305x-sxx-u-boot.bin为uboot</h4><h4 id="openwrt-ramips-rt305x-sxx-squashfs-sysupgrade-bin为linux">openwrt-ramips-rt305x-sxx-squashfs-sysupgrade.bin为linux</h4><p><img src="http://transing.bj.bcebos.com/rt5350-images.JPG?responseContentDisposition=attachment" alt=""></p>
-<h2 id="2-刷入镜像">2.刷入镜像</h2><h4 id="首先，需要刷入uboot，如果你的板已经烧录过uboot，可以用那个uboot的更新方式来更新本源码里的uboot，或者可以用烧录器，">首先，需要刷入uboot，如果你的板已经烧录过uboot，可以用那个uboot的更新方式来更新本源码里的uboot，或者可以用烧录器，</h4><h4 id="已经刷了本原码的uboot的板，按照下面的方式刷入linux即可">已经刷了本原码的uboot的板，按照下面的方式刷入linux即可</h4><h5 id="tftp64目录如下">tftp64目录如下</h5><p><img src="http://transing.bj.bcebos.com/rt5350-flash1.JPG?responseContentDisposition=attachment" alt=""></p>
-<h5 id="网卡配置如下">网卡配置如下</h5><p><img src="http://transing.bj.bcebos.com/rt5350-flash2.JPG?responseContentDisposition=attachment" alt=""></p>
-<h5 id="uboot串口波特率设置为115200,rt5350板用网线根板相连后，在串口输入run_ll命令">uboot串口波特率设置为115200,rt5350板用网线根板相连后，在串口输入run ll命令</h5><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">run</span> <span class="bash">ll</span></span><br></pre></td></tr></table></figure>
-<p><img src="http://transing.bj.bcebos.com/rt5350-flash4.JPG?responseContentDisposition=attachment" alt=""><br>等待下载刷写完毕</p>
-<h2 id="3-测试wifi_audio">3.测试wifi audio</h2><h3 id="接入usb声卡，如下图">接入usb声卡，如下图</h3><p><img src="http://transing.bj.bcebos.com/IMG_20150727_222954.jpg?responseContentDisposition=attachment" alt=""></p>
-<h3 id="接入i2s声卡测试，如下图">接入i2s声卡测试，如下图</h3><p><img src="http://transing.bj.bcebos.com/rt5350-i2s.jpg?responseContentDisposition=attachment" alt=""></p>
-<h3 id="正常的话，/dev/snd下应该有如下设备">正常的话，/dev/snd下应该有如下设备</h3><p><img src="http://transing.bj.bcebos.com/rt5350-wifi-audio.JPG?responseContentDisposition=attachment" alt=""></p>
-<h3 id="执行如下命令">执行如下命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gmediarender <span class="operator">-f</span> sxx-wifi-audio</span><br></pre></td></tr></table></figure>
-<p><img src="http://transing.bj.bcebos.com/rt5350-wifi-audio2.JPG?responseContentDisposition=attachment" alt=""></p>
-<h3 id="手机上播放一首音乐，选择投射到sxx-wifi-audio设备上">手机上播放一首音乐，选择投射到sxx-wifi-audio设备上</h3><p><img src="http://transing.bj.bcebos.com/Screenshot_2015-07-27-22-35-42.png?responseContentDisposition=attachment" alt=""></p>
-<h2 id="完毕">完毕</h2>  
+		<h2 id="1-下载代码和编译">1.下载代码和编译</h2><p>编译之前，还需要安装一些工具，下面用choco来安装的<br><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">choco <span class="keyword">install</span> svn</span><br><span class="line">choco <span class="keyword">install</span> ant</span><br></pre></td></tr></table></figure></p>
+<p>安装完svn后，可能还需要将svn所在目录添加到环境变量中，在win10上，svn<br>被安装到了C:\Program Files (x86)\Subversion\bin目录下，吧这个目录添加<br>到PATH环境变量中就可以了</p>
+<p>从github下载代码并编译<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git clone git:<span class="comment">//github.com/NeuralEnsemble/neuroConstruct.git</span></span><br><span class="line"><span class="keyword">cd</span> neuroConstruct</span><br><span class="line">updatenC.bat</span><br><span class="line">ant <span class="keyword">run</span></span><br></pre></td></tr></table></figure></p>
+<p>编译成功后会有neuroConstruct_1.7.1.jar在neuroConstruct根目录下生成，执行<br>ant run命令后，会自动编译，并且运行neuroConstruct</p>
+<h2 id="2-下载C线虫神经模型">2.下载C线虫神经模型</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone <span class="string">https:</span><span class="comment">//github.com/openworm/CElegansNeuroML.git</span></span><br></pre></td></tr></table></figure>
+<p>在neuroConstruct的File菜单下，点Open Project菜单，打开<br>CElegansNeuroML\CElegans\CElegans.ncx文件，这个就是C线虫的神经模型</p>
+<p>效果如下<br><img src="http://transing.bj.bcebos.com/image/celegans_neurons.png?responseContentDisposition=attachment" alt=""></p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -154,7 +119,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://transing.xyz/2015/07/27/wifi-audio-on-rt5350-with-openwrt/" data-title="rt5350板上跑wifi audio | 奇点2050" data-tsina="null" class="share clearfix">
+	  <div data-url="http://transing.xyz/2015/08/28/using-neuroConstruct/" data-title="在windows下使用neuroConstruct观看C线虫的神经模型 | 奇点2050" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -167,19 +132,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/08/03/native-webif-for-android/" title="native webif for android">
-  <strong>上一篇：</strong><br/>
-  <span>
-  native webif for android</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/07/23/use-baidu-bos-for-ghost-0-6-4/"  title="Ghost 0.6.4使用baidu bos存储图片">
+<a href="/2015/08/19/openwrt-pcm-driver-on-mt7620-or-rt5350/"  title="openwrt pcm driver on mt7620 or rt5350">
  <strong>下一篇：</strong><br/> 
- <span>Ghost 0.6.4使用baidu bos存储图片
+ <span>openwrt pcm driver on mt7620 or rt5350
 </span>
 </a>
 </div>
@@ -188,7 +145,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/07/27/wifi-audio-on-rt5350-with-openwrt/" data-title="rt5350板上跑wifi audio" data-url="http://transing.xyz/2015/07/27/wifi-audio-on-rt5350-with-openwrt/"></div>
+	<div class="ds-thread" data-thread-key="2015/08/28/using-neuroConstruct/" data-title="在windows下使用neuroConstruct观看C线虫的神经模型" data-url="http://transing.xyz/2015/08/28/using-neuroConstruct/"></div>
 </section>
 
 
