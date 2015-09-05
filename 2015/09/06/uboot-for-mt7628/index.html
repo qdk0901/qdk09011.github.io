@@ -4,30 +4,39 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>在windows下使用neuroConstruct观看C线虫的神经模型 | 奇点2050</title>
+    <title>uboot for mt7628 | 奇点2050</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="transinger">
     
 
     
-    <meta name="description" content="1.下载代码和编译编译之前，还需要安装一些工具，下面用choco来安装的12choco install svnchoco install ant
-安装完svn后，可能还需要将svn所在目录添加到环境变量中，在win10上，svn被安装到了C:\Program Files (x86)\Subversion\bin目录下，吧这个目录添加到PATH环境变量中就可以了
-从github下载代码并编译1234">
+    <meta name="description" content="git clone https://github.com/qdk0901/openwrt-uboot-mt7628.git
+
+copy openwrt-uboot-mt7628 folder to openwrt_source/package/boot/uboot-mt7628
+
+select uboot-mt7628 package under menuconfig in bootloader">
 <meta property="og:type" content="article">
-<meta property="og:title" content="在windows下使用neuroConstruct观看C线虫的神经模型">
-<meta property="og:url" content="http://transing.xyz/2015/08/28/using-neuroConstruct/index.html">
+<meta property="og:title" content="uboot for mt7628">
+<meta property="og:url" content="http://transing.xyz/2015/09/06/uboot-for-mt7628/index.html">
 <meta property="og:site_name" content="奇点2050">
-<meta property="og:description" content="1.下载代码和编译编译之前，还需要安装一些工具，下面用choco来安装的12choco install svnchoco install ant
-安装完svn后，可能还需要将svn所在目录添加到环境变量中，在win10上，svn被安装到了C:\Program Files (x86)\Subversion\bin目录下，吧这个目录添加到PATH环境变量中就可以了
-从github下载代码并编译1234">
-<meta property="og:image" content="http://transing.bj.bcebos.com/image/celegans_neurons.png?responseContentDisposition=attachment">
-<meta property="og:updated_time" content="2015-08-28T04:35:22.579Z">
+<meta property="og:description" content="git clone https://github.com/qdk0901/openwrt-uboot-mt7628.git
+
+copy openwrt-uboot-mt7628 folder to openwrt_source/package/boot/uboot-mt7628
+
+select uboot-mt7628 package under menuconfig in bootloader">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/openwrt-mt7628-uboot.png?responseContentDisposition=attachment">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/mt7628-menuconfig.png?responseContentDisposition=attachment">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/openwrt-mt7628-bootloader.png?responseContentDisposition=attachment">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/mt7628-boot-bin.png?responseContentDisposition=attachment">
+<meta property="og:updated_time" content="2015-09-05T16:39:03.455Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="在windows下使用neuroConstruct观看C线虫的神经模型">
-<meta name="twitter:description" content="1.下载代码和编译编译之前，还需要安装一些工具，下面用choco来安装的12choco install svnchoco install ant
-安装完svn后，可能还需要将svn所在目录添加到环境变量中，在win10上，svn被安装到了C:\Program Files (x86)\Subversion\bin目录下，吧这个目录添加到PATH环境变量中就可以了
-从github下载代码并编译1234">
+<meta name="twitter:title" content="uboot for mt7628">
+<meta name="twitter:description" content="git clone https://github.com/qdk0901/openwrt-uboot-mt7628.git
+
+copy openwrt-uboot-mt7628 folder to openwrt_source/package/boot/uboot-mt7628
+
+select uboot-mt7628 package under menuconfig in bootloader">
 
     
     <link rel="alternative" href="/atom.xml" title="奇点2050" type="application/atom+xml">
@@ -87,26 +96,32 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/08/28/using-neuroConstruct/" title="在windows下使用neuroConstruct观看C线虫的神经模型" itemprop="url">在windows下使用neuroConstruct观看C线虫的神经模型</a>
+      <a href="/2015/09/06/uboot-for-mt7628/" title="uboot for mt7628" itemprop="url">uboot for mt7628</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="transinger" target="_blank" itemprop="author">transinger</a>
 		
   <p class="article-time">
-    <time datetime="2015-08-28T04:22:03.000Z" itemprop="datePublished"> 发表于 2015-08-28</time>
+    <time datetime="2015-09-05T16:30:23.000Z" itemprop="datePublished"> 发表于 2015-09-06</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<h2 id="1-下载代码和编译">1.下载代码和编译</h2><p>编译之前，还需要安装一些工具，下面用choco来安装的<br><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">choco <span class="keyword">install</span> svn</span><br><span class="line">choco <span class="keyword">install</span> ant</span><br></pre></td></tr></table></figure></p>
-<p>安装完svn后，可能还需要将svn所在目录添加到环境变量中，在win10上，svn<br>被安装到了C:\Program Files (x86)\Subversion\bin目录下，吧这个目录添加<br>到PATH环境变量中就可以了</p>
-<p>从github下载代码并编译<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git clone git:<span class="comment">//github.com/NeuralEnsemble/neuroConstruct.git</span></span><br><span class="line"><span class="keyword">cd</span> neuroConstruct</span><br><span class="line">updatenC.bat</span><br><span class="line">ant <span class="keyword">run</span></span><br></pre></td></tr></table></figure></p>
-<p>编译成功后会有neuroConstruct_1.7.1.jar在neuroConstruct根目录下生成，执行<br>ant run命令后，会自动编译，并且运行neuroConstruct</p>
-<h2 id="2-下载C线虫神经模型">2.下载C线虫神经模型</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone <span class="string">https:</span><span class="comment">//github.com/openworm/CElegansNeuroML.git</span></span><br></pre></td></tr></table></figure>
-<p>在neuroConstruct的File菜单下，点Open Project菜单，打开<br>CElegansNeuroML\CElegans\CElegans.ncx文件，这个就是C线虫的神经模型</p>
-<p>效果如下<br><img src="http://transing.bj.bcebos.com/image/celegans_neurons.png?responseContentDisposition=attachment" alt=""></p>
+		<ol>
+<li><p>git clone <a href="https://github.com/qdk0901/openwrt-uboot-mt7628.git" target="_blank" rel="external">https://github.com/qdk0901/openwrt-uboot-mt7628.git</a></p>
+</li>
+<li><p>copy openwrt-uboot-mt7628 folder to openwrt_source/package/boot/uboot-mt7628<br><img src="http://transing.bj.bcebos.com/image/openwrt-mt7628-uboot.png?responseContentDisposition=attachment" alt=""></p>
+</li>
+<li><p>select uboot-mt7628 package under menuconfig in bootloader category<br><img src="http://transing.bj.bcebos.com/image/mt7628-menuconfig.png?responseContentDisposition=attachment" alt=""><br><img src="http://transing.bj.bcebos.com/image/openwrt-mt7628-bootloader.png?responseContentDisposition=attachment" alt=""></p>
+</li>
+<li><p>building uboot with under commands</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make <span class="keyword">package</span><span class="regexp">/uboot-mt7628/</span>prepare V=s</span><br><span class="line">make <span class="keyword">package</span><span class="regexp">/uboot-mt7628/</span><span class="keyword">compile</span> V=s</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>uboot.bin will generated under openwrt_source/bin folder<br><img src="http://transing.bj.bcebos.com/image/mt7628-boot-bin.png?responseContentDisposition=attachment" alt=""></p>
+</li>
+</ol>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -119,7 +134,7 @@
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://transing.xyz/2015/08/28/using-neuroConstruct/" data-title="在windows下使用neuroConstruct观看C线虫的神经模型 | 奇点2050" data-tsina="null" class="share clearfix">
+	  <div data-url="http://transing.xyz/2015/09/06/uboot-for-mt7628/" data-title="uboot for mt7628 | 奇点2050" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -132,19 +147,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/09/06/uboot-for-mt7628/" title="uboot for mt7628">
-  <strong>上一篇：</strong><br/>
-  <span>
-  uboot for mt7628</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/08/19/openwrt-pcm-driver-on-mt7620-or-rt5350/"  title="openwrt pcm driver on mt7620 or rt5350">
+<a href="/2015/08/28/using-neuroConstruct/"  title="在windows下使用neuroConstruct观看C线虫的神经模型">
  <strong>下一篇：</strong><br/> 
- <span>openwrt pcm driver on mt7620 or rt5350
+ <span>在windows下使用neuroConstruct观看C线虫的神经模型
 </span>
 </a>
 </div>
@@ -153,7 +160,7 @@
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/08/28/using-neuroConstruct/" data-title="在windows下使用neuroConstruct观看C线虫的神经模型" data-url="http://transing.xyz/2015/08/28/using-neuroConstruct/"></div>
+	<div class="ds-thread" data-thread-key="2015/09/06/uboot-for-mt7628/" data-title="uboot for mt7628" data-url="http://transing.xyz/2015/09/06/uboot-for-mt7628/"></div>
 </section>
 
 
