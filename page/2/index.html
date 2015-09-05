@@ -78,6 +78,27 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
+    <a href="/2015/07/23/build-protobuf-with-ndk-under-windows/" title="windows下使用ndk编译protobuf" itemprop="url">
+  
+    <h1 itemprop="name">windows下使用ndk编译protobuf</h1>
+    
+     
+           <p itemprop="description" >12git clone https://github.com/google/protobuf.gitgit checkout v3.0.0-alpha-3.1
+在protobuf文件夹下建立build.bat，内容如下123set PATH=%PATH%;E:\devel\and</p>
+        
+    
+    <time datetime="2015-07-23T04:12:21.000Z" itemprop="datePublished">2015-07-23</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
     <a href="/2015/07/23/build-grpc-with-ndk-under-windows/" title="windows下使用ndk编译grpc" itemprop="url">
   
     <h1 itemprop="name">windows下使用ndk编译grpc</h1>
@@ -120,12 +141,14 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
-    <a href="/2015/07/23/ndk-link-gnustl_static-problem/" title="ndk链接gnustl_static产生的问题" itemprop="url">
+    <a href="/2015/07/23/deploy-ghost-on-bae/" title="在BAE上部署Ghost开发版" itemprop="url">
   
-    <h1 itemprop="name">ndk链接gnustl_static产生的问题</h1>
+    <h1 itemprop="name">在BAE上部署Ghost开发版</h1>
     
      
-           <p itemprop="description" >今天遇到一个ndk编译的程序运行崩溃的问题，定位到下面的赋值语句会产生奇怪析构错误123*recv_status_ = Status(    static_cast&amp;lt;StatusCode&amp;gt;(status_code_),    status_details_ ? grp</p>
+           <p itemprop="description" >首先申请BAE账号，然后来到BAE控制台添加部署
+注意内存要选256M的，Ghost需要的内存超过140M，代码版本工具选git
+添加私有mysql服务，来到控制台选私有mysql，因为免费的mysql有长连接问题，需要修改到knex module，这里没办法改。网上改连接池数目</p>
         
     
     <time datetime="2015-07-23T04:07:19.000Z" itemprop="datePublished">2015-07-23</time>
@@ -140,14 +163,12 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
-    <a href="/2015/07/23/deploy-ghost-on-bae/" title="在BAE上部署Ghost开发版" itemprop="url">
+    <a href="/2015/07/23/ndk-link-gnustl_static-problem/" title="ndk链接gnustl_static产生的问题" itemprop="url">
   
-    <h1 itemprop="name">在BAE上部署Ghost开发版</h1>
+    <h1 itemprop="name">ndk链接gnustl_static产生的问题</h1>
     
      
-           <p itemprop="description" >首先申请BAE账号，然后来到BAE控制台添加部署
-注意内存要选256M的，Ghost需要的内存超过140M，代码版本工具选git
-添加私有mysql服务，来到控制台选私有mysql，因为免费的mysql有长连接问题，需要修改到knex module，这里没办法改。网上改连接池数目</p>
+           <p itemprop="description" >今天遇到一个ndk编译的程序运行崩溃的问题，定位到下面的赋值语句会产生奇怪析构错误123*recv_status_ = Status(    static_cast&amp;lt;StatusCode&amp;gt;(status_code_),    status_details_ ? grp</p>
         
     
     <time datetime="2015-07-23T04:07:19.000Z" itemprop="datePublished">2015-07-23</time>
