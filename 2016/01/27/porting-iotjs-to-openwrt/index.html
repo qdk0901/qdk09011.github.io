@@ -4,39 +4,29 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>uboot for mt7628 | 奇点2050</title>
+    <title>porting iotjs to openwrt | 奇点2050</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="transinger">
     
 
     
-    <meta name="description" content="git clone https://github.com/qdk0901/openwrt-uboot-mt7628.git
-
-copy openwrt-uboot-mt7628 folder to openwrt_source/package/boot/uboot-mt7628
-
-select uboot-mt7628 package under menuconfig in bootloader">
+    <meta name="description" content="最近把三星的iotjs移植到了openwrt上跑，在rt5350的板上测试了一下。记录一下遇到的问题。
+1.把iotjs clone下来，发现支持linux，这样就比较简单了，因为openwrt也就是linux的一个变种。大致思路就是把cmake里的工具链，改成openwrt的工具链就可以了。
+2.首先就是到cmake/config目录里，把arm-linux.cmake拷贝一份，名字改成mips">
 <meta property="og:type" content="article">
-<meta property="og:title" content="uboot for mt7628">
-<meta property="og:url" content="http://transing.xyz/2015/09/06/uboot-for-mt7628/index.html">
+<meta property="og:title" content="porting iotjs to openwrt">
+<meta property="og:url" content="http://transing.xyz/2016/01/27/porting-iotjs-to-openwrt/index.html">
 <meta property="og:site_name" content="奇点2050">
-<meta property="og:description" content="git clone https://github.com/qdk0901/openwrt-uboot-mt7628.git
-
-copy openwrt-uboot-mt7628 folder to openwrt_source/package/boot/uboot-mt7628
-
-select uboot-mt7628 package under menuconfig in bootloader">
-<meta property="og:image" content="http://transing.bj.bcebos.com/image/openwrt-mt7628-uboot.png?responseContentDisposition=attachment">
-<meta property="og:image" content="http://transing.bj.bcebos.com/image/mt7628-menuconfig.png?responseContentDisposition=attachment">
-<meta property="og:image" content="http://transing.bj.bcebos.com/image/openwrt-mt7628-bootloader.png?responseContentDisposition=attachment">
-<meta property="og:image" content="http://transing.bj.bcebos.com/image/mt7628-boot-bin.png?responseContentDisposition=attachment">
-<meta property="og:updated_time" content="2015-09-05T16:39:03.455Z">
+<meta property="og:description" content="最近把三星的iotjs移植到了openwrt上跑，在rt5350的板上测试了一下。记录一下遇到的问题。
+1.把iotjs clone下来，发现支持linux，这样就比较简单了，因为openwrt也就是linux的一个变种。大致思路就是把cmake里的工具链，改成openwrt的工具链就可以了。
+2.首先就是到cmake/config目录里，把arm-linux.cmake拷贝一份，名字改成mips">
+<meta property="og:updated_time" content="2016-01-27T15:21:59.084Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="uboot for mt7628">
-<meta name="twitter:description" content="git clone https://github.com/qdk0901/openwrt-uboot-mt7628.git
-
-copy openwrt-uboot-mt7628 folder to openwrt_source/package/boot/uboot-mt7628
-
-select uboot-mt7628 package under menuconfig in bootloader">
+<meta name="twitter:title" content="porting iotjs to openwrt">
+<meta name="twitter:description" content="最近把三星的iotjs移植到了openwrt上跑，在rt5350的板上测试了一下。记录一下遇到的问题。
+1.把iotjs clone下来，发现支持linux，这样就比较简单了，因为openwrt也就是linux的一个变种。大致思路就是把cmake里的工具链，改成openwrt的工具链就可以了。
+2.首先就是到cmake/config目录里，把arm-linux.cmake拷贝一份，名字改成mips">
 
     
     <link rel="alternative" href="/atom.xml" title="奇点2050" type="application/atom+xml">
@@ -96,32 +86,29 @@ select uboot-mt7628 package under menuconfig in bootloader">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/09/06/uboot-for-mt7628/" title="uboot for mt7628" itemprop="url">uboot for mt7628</a>
+      <a href="/2016/01/27/porting-iotjs-to-openwrt/" title="porting iotjs to openwrt" itemprop="url">porting iotjs to openwrt</a>
   </h1>
   <p class="article-author">By
        
 		<a href="/about" title="transinger" target="_blank" itemprop="author">transinger</a>
 		
   <p class="article-time">
-    <time datetime="2015-09-05T16:30:23.000Z" itemprop="datePublished"> 发表于 2015-09-06</time>
+    <time datetime="2016-01-27T14:55:34.000Z" itemprop="datePublished"> 发表于 2016-01-27</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		<ol>
-<li><p>git clone <a href="https://github.com/qdk0901/openwrt-uboot-mt7628.git" target="_blank" rel="external">https://github.com/qdk0901/openwrt-uboot-mt7628.git</a></p>
-</li>
-<li><p>copy openwrt-uboot-mt7628 folder to openwrt_source/package/boot/uboot-mt7628<br><img src="http://transing.bj.bcebos.com/image/openwrt-mt7628-uboot.png?responseContentDisposition=attachment" alt=""></p>
-</li>
-<li><p>select uboot-mt7628 package under menuconfig in bootloader category<br><img src="http://transing.bj.bcebos.com/image/mt7628-menuconfig.png?responseContentDisposition=attachment" alt=""><br><img src="http://transing.bj.bcebos.com/image/openwrt-mt7628-bootloader.png?responseContentDisposition=attachment" alt=""></p>
-</li>
-<li><p>building uboot with under commands</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">make <span class="keyword">package</span><span class="regexp">/uboot-mt7628/</span>prepare V=s</span><br><span class="line">make <span class="keyword">package</span><span class="regexp">/uboot-mt7628/</span><span class="keyword">compile</span> V=s</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>uboot.bin will generated under openwrt_source/bin folder<br><img src="http://transing.bj.bcebos.com/image/mt7628-boot-bin.png?responseContentDisposition=attachment" alt=""></p>
-</li>
-</ol>
+		<p>最近把三星的iotjs移植到了openwrt上跑，在rt5350的板上测试了一下。记录一下遇到的问题。</p>
+<p>1.把<a href="https://github.com/Samsung/iotjs" target="_blank" rel="external">iotjs</a> clone下来，发现支持linux，<br>这样就比较简单了，因为openwrt也就是linux的一个变种。大致思路就是把cmake里的<br>工具链，改成openwrt的工具链就可以了。</p>
+<p>2.首先就是到cmake/config目录里，把arm-linux.cmake拷贝一份，<br>名字改成mips-openwrt.cmake，c编译器改成mipsel-openwrt-linux-gcc，<br>c++编译器改成mipsel-openwrt-linux-g++。<br>deps目录下的libtuv和jerry的工具链配置，也是照此办理</p>
+<p>3.其次就是，参考iotjs的wiki得知，编译主要由toos/build.py来控制，这里面<br>关于linux的部分，也照抄一份给openwrt就好了</p>
+<p>4.编译起来后，遇到各种CMakeLists.txt报错的问题，也大致是因为target_os<br>由linux改为openwrt引起的，按照各自的情况处理就好了</p>
+<p>5.编译jerrscript的过程中，报”sorry - this program has been built without plugin support”<br>错误，发现是因为跑了mipsel-openwrt-linux-uclibc-gcc-ar引起的，用<br>mipsel-openwrt-linux-uclibc-ar替换后问题消失，这部分在deps/jerry/CMakeLists.txt<br>里控制，添加下面的判断后，问题解决。所以，target_os改成openwrt，还是有些用处的。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">   <span class="function"><span class="title">if</span><span class="params">(<span class="string">"$&#123;PLATFORM&#125;"</span> STREQUAL <span class="string">"OPENWRT"</span>)</span></span></span><br><span class="line"> 	<span class="function"><span class="title">string</span><span class="params">(REPLACE <span class="string">"gcc"</span> <span class="string">"ar"</span> CMAKE_AR $&#123;FILE_NAME_GCC&#125;)</span></span></span><br><span class="line"> 	<span class="function"><span class="title">string</span><span class="params">(REPLACE <span class="string">"gcc"</span> <span class="string">"ranlib"</span> CMAKE_RANLIB $&#123;FILE_NAME_GCC&#125;)</span></span></span><br><span class="line">   <span class="function"><span class="title">else</span><span class="params">()</span></span></span><br><span class="line"> 	<span class="function"><span class="title">string</span><span class="params">(REPLACE <span class="string">"gcc"</span> <span class="string">"gcc-ar"</span> CMAKE_AR $&#123;FILE_NAME_GCC&#125;)</span></span></span><br><span class="line"> 	<span class="function"><span class="title">string</span><span class="params">(REPLACE <span class="string">"gcc"</span> <span class="string">"gcc-ranlib"</span> CMAKE_RANLIB $&#123;FILE_NAME_GCC&#125;)</span></span></span><br><span class="line">   <span class="function"><span class="title">endif</span><span class="params">()</span></span></span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line"><span class="number">6</span>.改完上面这些后，编译ok，但是跑起来后，初始化uv_default_loop的时候出错退出。</span><br><span class="line">经过一番查找，发现是deps/libtuv/source/linux/uv_linux_syscall.c的uv__eventfd2</span><br><span class="line">报了<span class="string">"Invalid argument"</span>错误，又经过一番查找之后，发现是</span><br><span class="line">deps/libtuv/source/linux/uv_linux_syscall.h里硬编码的<span class="function"><span class="title">UV__O_NONBLOCK</span><span class="params">(<span class="number">0</span>x800)</span></span>跟</span><br><span class="line">arch/mips/include/uapi/asm/fcntl.h里定义的<span class="function"><span class="title">O_NONBLOCK</span><span class="params">(<span class="number">0</span>x80)</span></span>对不上，导致</span><br><span class="line">eventfd2系统调用检查参数时出错。最后发现，libtuv的最新版本已经解决了这个问题，</span><br><span class="line">而iotjs用的还是有问题的libtuv版本。于是执行</span><br></pre></td></tr></table></figure>
+<p>git submodule update —remote —recursive<br>```<br>把submodule的版本都更新到最新，再按照1~5的步骤把该加的都加上，编译出来的iotjs<br>在rt5350的板子上跑起来就正常了。</p>
+<p>7.iotjs程序大小2.6M左右，跑timer测试，占用内存4M左右，<br>在8M flash + 32M DDR的板上跑起来还可以。</p>
+<p>8.最后把源码整理到了<a href="https://github.com/qdk0901/iotjs-openwrt" target="_blank" rel="external">这里</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -134,7 +121,7 @@ select uboot-mt7628 package under menuconfig in bootloader">
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://transing.xyz/2015/09/06/uboot-for-mt7628/" data-title="uboot for mt7628 | 奇点2050" data-tsina="null" class="share clearfix">
+	  <div data-url="http://transing.xyz/2016/01/27/porting-iotjs-to-openwrt/" data-title="porting iotjs to openwrt | 奇点2050" data-tsina="null" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -147,19 +134,11 @@ select uboot-mt7628 package under menuconfig in bootloader">
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/09/06/AudioTrack-and-AudioRecord-test/" title="使用AudioRecord和AudioTrack进行录音放音测试">
-  <strong>上一篇：</strong><br/>
-  <span>
-  使用AudioRecord和AudioTrack进行录音放音测试</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/08/28/using-neuroConstruct/"  title="在windows下使用neuroConstruct观看C线虫的神经模型">
+<a href="/2015/12/06/use-jerryscript-for-openwrt/"  title="在openwrt上使用jerryscript做js嵌入">
  <strong>下一篇：</strong><br/> 
- <span>在windows下使用neuroConstruct观看C线虫的神经模型
+ <span>在openwrt上使用jerryscript做js嵌入
 </span>
 </a>
 </div>
@@ -168,7 +147,7 @@ select uboot-mt7628 package under menuconfig in bootloader">
 
 	
 <section id="comments" class="comment">
-	<div class="ds-thread" data-thread-key="2015/09/06/uboot-for-mt7628/" data-title="uboot for mt7628" data-url="http://transing.xyz/2015/09/06/uboot-for-mt7628/"></div>
+	<div class="ds-thread" data-thread-key="2016/01/27/porting-iotjs-to-openwrt/" data-title="porting iotjs to openwrt" data-url="http://transing.xyz/2016/01/27/porting-iotjs-to-openwrt/"></div>
 </section>
 
 
