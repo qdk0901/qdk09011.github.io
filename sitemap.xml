@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://transing.xyz/madog.html</loc>
+    <lastmod>2016-04-29T09:36:16.554Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://transing.xyz/js/d3.v3.min.js</loc>
+    <lastmod>2016-04-29T09:31:38.760Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://transing.xyz/2016/01/27/porting-iotjs-to-openwrt/</loc>
     <lastmod>2016-01-27T15:30:26.475Z</lastmod>
   </url>
