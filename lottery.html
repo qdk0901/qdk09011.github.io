@@ -1,0 +1,129 @@
+
+  
+    <!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+div.tooltip {	
+    position: absolute;			
+    text-align: center;							
+    padding: 2px;
+    background: black;	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;	
+    color: #ffffff
+}
+
+</style>
+<body>
+
+<!-- load the d3.js library -->    
+<script src="/js/d3.v3.min.js"></script>
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+<script>
+
+function stringToColor(str)
+{
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+       hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    
+    var color = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+    return "00000".substring(0, 6 - color.length) + color;
+} 
+
+
+var width = $(window).width();
+var height = $(window).height();
+var margin = {top: 20, right: 20, bottom: 30, left: 20};
+
+width = width - margin.left - margin.right,
+height = height - margin.top - margin.bottom;
+
+var xscale = d3.scale.linear().range([0, width]);
+var yscale = d3.scale.linear().range([height, 0]);
+
+var tip = d3.select("body").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
+    
+d3.json("/data/lottery.json", function(error, json) {
+    if (error)
+        return console.warn(error);
+
+    //spinner.stop();
+
+    
+    xscale.domain(d3.extent(json, function(d) { return d.xy[0]; }));
+    yscale.domain(d3.extent(json, function(d) { return d.xy[1]; }));
+
+    var zoom = d3.behavior.zoom()
+        .x(xscale)
+        .y(yscale)
+        .scaleExtent([0, 50])
+        .on("zoom", function() {
+            //only scale the position, don't scale the size
+            d3.select(this).selectAll("circle").attr("cx", function(d) { return xscale(d.xy[0])});
+            d3.select(this).selectAll("circle").attr("cy", function(d) { return yscale(d.xy[1])});
+            d3.select(this).selectAll("text").attr("x", function(d) { return xscale(d.xy[0])});
+            d3.select(this).selectAll("text").attr("y", function(d) { return yscale(d.xy[1])});
+        });
+    
+    var svg = d3.select("body")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .call(zoom)
+        
+    var points = svg.selectAll(".dot")
+        .data(json)
+        
+        
+    var pointEnter = points.enter().append("g")
+
+    pointEnter.append("circle")
+        .attr("r", function(d) { return 1 + d.first / 10 })
+        .attr("cx", function(d) { return xscale(d.xy[0])})
+        .attr("cy", function(d) { return yscale(d.xy[1]) + 10})
+        .style("fill", "#FF0000")
+        .classed("dot", true)
+        .on("mouseover", function(d) {		
+            tip.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+            tip.html("第" + d.date + "期<br/>号码：" + d.code + "<br/>一等奖：" + d.first + "注")	
+                .style("left", (d3.event.pageX) + "px")		
+                .style("top", (d3.event.pageY - 28) + "px");	
+            })					
+        .on("mouseout", function(d) {		
+            tip.transition()		
+                .duration(500)		
+                .style("opacity", 0);	
+        });
+        
+
+    pointEnter.append("text")
+        .filter(function(d) { return d.first > 10})
+        .attr("x", function(d) { return xscale(d.xy[0]); })
+        .attr("y", function(d) { return yscale(d.xy[1]) + 10; })
+        .text(function(d){ return d.date})
+        .classed("dot", true)
+    
+    $("#loading").fadeOut();
+});
+
+
+
+</script>
+    <div id="loading">
+        <div style="position: fixed; top: 40%; width: 100%;
+            font-size: 600%; text-align: center; z-index: 11;">loading...</div>
+        <div style="position: fixed; height: 100%; width: 100%;
+            z-index: 10; background-color: #c8ebf0; opacity: 0.3;"></div>
+    </div>
+</body>
+  

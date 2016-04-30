@@ -2,13 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://transing.xyz/codeatlas.html</loc>
-    <lastmod>2016-04-29T10:17:04.034Z</lastmod>
+    <loc>http://transing.xyz/about/index.html</loc>
+    <lastmod>2016-04-30T04:45:01.873Z</lastmod>
   </url>
   
   <url>
-    <loc>http://transing.xyz/about/index.html</loc>
-    <lastmod>2016-04-29T10:04:20.332Z</lastmod>
+    <loc>http://transing.xyz/lottery.html</loc>
+    <lastmod>2016-04-30T04:43:25.563Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://transing.xyz/data/lottery.json</loc>
+    <lastmod>2016-04-30T04:35:18.493Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://transing.xyz/codeatlas.html</loc>
+    <lastmod>2016-04-30T04:02:07.101Z</lastmod>
   </url>
   
   <url>
