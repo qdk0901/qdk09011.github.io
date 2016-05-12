@@ -13,22 +13,22 @@
     
     <meta name="description" content="看到这里用HMM分析沪深300价格走势，所以用比特币价格走势来练习一下HMM
 那篇文章里的代码可以直接在joinquant研究面板进行调试，ipython交互式测试代码的方式非常方便
-比特币价格数据来自btcc apihttps://data.btcchina.com/data/historydata对btcc的历史数据稍微研究了一下，发现大概有6800万次的交易，其中2015年1月到现在就有接近">
+比特币价格数据来自btcc api对btcc的历史数据稍微研究了一下，发现大概有6800万次的交易，其中2015年1月到现在就有接近4800万次，所以把这段时间的数据抓下来就好了，因为数据实在是太多，所以每1000次">
 <meta property="og:type" content="article">
 <meta property="og:title" content="用HMM分析比特币价格">
 <meta property="og:url" content="http://transing.xyz/2016/05/12/using-HMM-to-analyze-bitcoin-price/index.html">
 <meta property="og:site_name" content="奇点2050">
 <meta property="og:description" content="看到这里用HMM分析沪深300价格走势，所以用比特币价格走势来练习一下HMM
 那篇文章里的代码可以直接在joinquant研究面板进行调试，ipython交互式测试代码的方式非常方便
-比特币价格数据来自btcc apihttps://data.btcchina.com/data/historydata对btcc的历史数据稍微研究了一下，发现大概有6800万次的交易，其中2015年1月到现在就有接近">
+比特币价格数据来自btcc api对btcc的历史数据稍微研究了一下，发现大概有6800万次的交易，其中2015年1月到现在就有接近4800万次，所以把这段时间的数据抓下来就好了，因为数据实在是太多，所以每1000次">
 <meta property="og:image" content="http://transing.bj.bcebos.com/image/btcc_latent1.png">
 <meta property="og:image" content="http://transing.bj.bcebos.com/image/btcc_latent.png">
-<meta property="og:updated_time" content="2016-05-12T09:16:38.263Z">
+<meta property="og:updated_time" content="2016-05-12T09:20:31.977Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用HMM分析比特币价格">
 <meta name="twitter:description" content="看到这里用HMM分析沪深300价格走势，所以用比特币价格走势来练习一下HMM
 那篇文章里的代码可以直接在joinquant研究面板进行调试，ipython交互式测试代码的方式非常方便
-比特币价格数据来自btcc apihttps://data.btcchina.com/data/historydata对btcc的历史数据稍微研究了一下，发现大概有6800万次的交易，其中2015年1月到现在就有接近">
+比特币价格数据来自btcc api对btcc的历史数据稍微研究了一下，发现大概有6800万次的交易，其中2015年1月到现在就有接近4800万次，所以把这段时间的数据抓下来就好了，因为数据实在是太多，所以每1000次">
 
     
     <link rel="alternative" href="/atom.xml" title="奇点2050" type="application/atom+xml">
@@ -103,7 +103,7 @@
 		
 		<p>看到<a href="https://zhuanlan.zhihu.com/p/20727973" target="_blank" rel="external">这里</a>用HMM分析沪深300价格走势，<br>所以用比特币价格走势来练习一下HMM</p>
 <p>那篇文章里的代码可以直接在<a href="https://www.joinquant.com/research" target="_blank" rel="external">joinquant研究面板</a><br>进行调试，ipython交互式测试代码的方式非常方便</p>
-<p>比特币价格数据来自<a href="">btcc api</a><a href="https://data.btcchina.com/data/historydata" target="_blank" rel="external">https://data.btcchina.com/data/historydata</a><br>对btcc的历史数据稍微研究了一下，发现大概有6800万次的交易，其中2015年1月到现在<br>就有接近4800万次，所以把这段时间的数据抓下来就好了，因为数据实在是太多，所以每1000次交易<br>只取一次用作分析，通算下来就是一个小时平均10次左右。<br>数据我已经传到了<a href="http://transing.bj.bcebos.com/data/btcc.json" target="_blank" rel="external">这里</a>,方便后面又需要的人直接下载。</p>
+<p>比特币价格数据来自<a href="https://data.btcchina.com/data/historydata" target="_blank" rel="external">btcc api</a><br>对btcc的历史数据稍微研究了一下，发现大概有6800万次的交易，其中2015年1月到现在<br>就有接近4800万次，所以把这段时间的数据抓下来就好了，因为数据实在是太多，所以每1000次交易<br>只取一次用作分析，通算下来就是一个小时平均10次左右。<br>数据我已经传到了<a href="http://transing.bj.bcebos.com/data/btcc.json" target="_blank" rel="external">这里</a>,方便后面又需要的人直接下载。</p>
 <p>主要代码如下：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">from hmmlearn.hmm <span class="built_in">import</span> GaussianHMM</span><br><span class="line"><span class="built_in">import</span> datetime</span><br><span class="line"><span class="built_in">import</span> numpy as np</span><br><span class="line">from matplotlib <span class="built_in">import</span> cm</span><br><span class="line">from matplotlib <span class="built_in">import</span> pyplot as plt</span><br><span class="line"><span class="built_in">import</span> json</span><br><span class="line"><span class="built_in">import</span> datetime as dt</span><br><span class="line"><span class="built_in">import</span> pandas as pd</span><br><span class="line"></span><br><span class="line">with open<span class="params">('btcc.json')</span> as btcc:</span><br><span class="line">    records = json.load<span class="params">(btcc)</span></span><br><span class="line"></span><br><span class="line">price = []</span><br><span class="line">date = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> r in records:</span><br><span class="line">    date.append<span class="params">(dt.datetime.fromtimestamp<span class="params">(r['date'])</span>)</span></span><br><span class="line">    price.append<span class="params">(r['price'])</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">logreturn = <span class="params">(np.log<span class="params">(np.array<span class="params">(price[<span class="number">1</span>:])</span>)</span>-np.log<span class="params">(np.array<span class="params">(price[:-<span class="number">1</span>])</span>)</span>)</span>[<span class="number">4</span>:]</span><br><span class="line"></span><br><span class="line">X = np.column_stack<span class="params">([logreturn])</span></span><br><span class="line">hmm = GaussianHMM<span class="params">(n_components=<span class="number">6</span>, covariance_type='diag', n_iter=<span class="number">5000</span>)</span>.fit<span class="params">(X)</span></span><br><span class="line">latent_states_sequence = hmm.predict<span class="params">(X)</span></span><br><span class="line"></span><br><span class="line">date = np.array<span class="params">(date[<span class="number">5</span>:])</span></span><br><span class="line">price = np.array<span class="params">(price[<span class="number">5</span>:])</span></span><br><span class="line"></span><br><span class="line">plt.figure<span class="params">(figsize = <span class="params">(<span class="number">15</span>, <span class="number">8</span>)</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i in range<span class="params">(hmm.n_components)</span>:</span><br><span class="line">    state = <span class="params">(latent_states_sequence == i)</span></span><br><span class="line">    plt.plot<span class="params">(date[state], price[state],'.',label = 'latent state %d'%i,lw = <span class="number">1</span>)</span></span><br><span class="line">    plt.legend<span class="params">()</span></span><br><span class="line">    plt.grid<span class="params">(<span class="number">1</span>)</span></span><br><span class="line"></span><br><span class="line">data = pd.DataFrame<span class="params">(&#123;'date':date, 'logreturn':logreturn&#125;)</span>.set_index<span class="params">('date')</span></span><br><span class="line"></span><br><span class="line">plt.figure<span class="params">(figsize=<span class="params">(<span class="number">15</span>,<span class="number">8</span>)</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i in range<span class="params">(hmm.n_components)</span>:</span><br><span class="line">    state = <span class="params">(latent_states_sequence == i)</span></span><br><span class="line">    idx = np.append<span class="params">(<span class="number">0</span>,state[:-<span class="number">1</span>])</span></span><br><span class="line">    </span><br><span class="line">    data['price <span class="built_in">%</span>d_return'<span class="built_in">%</span>i] = data.logreturn.multiply<span class="params">(idx,axis = <span class="number">0</span>)</span></span><br><span class="line">    </span><br><span class="line">    plt.plot<span class="params">(np.exp<span class="params">(data['price %d_return' %i].cumsum<span class="params">()</span>)</span>,label = 'latent_state %d'%i)</span></span><br><span class="line">    plt.legend<span class="params">()</span></span><br><span class="line">    plt.grid<span class="params">(<span class="number">1</span>)</span></span><br><span class="line">    </span><br><span class="line">plt.tight_layout<span class="params">()</span></span><br><span class="line">plt.show<span class="params">()</span></span><br></pre></td></tr></table></figure></p>
 <p>效果图：<br><img src="http://transing.bj.bcebos.com/image/btcc_latent1.png" alt=""><br><img src="http://transing.bj.bcebos.com/image/btcc_latent.png" alt=""></p>
   
@@ -131,6 +131,14 @@
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2016/05/12/using-tor-for-crawler/" title="在爬虫中使用tor切换出口ip">
+  <strong>上一篇：</strong><br/>
+  <span>
+  在爬虫中使用tor切换出口ip</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2016/01/27/porting-iotjs-to-openwrt/"  title="porting iotjs to openwrt">
