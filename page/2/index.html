@@ -78,6 +78,27 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
+    <a href="/2015/08/10/notch-filter-note/" title="双T型滤波器笔记" itemprop="url">
+  
+    <h1 itemprop="name">双T型滤波器笔记</h1>
+    
+     
+           <p itemprop="description" >1.双T Notch滤波器的原理图如下
+2.由以上电路可以得到方程如下1234567由电路得到方程如下(X-v1)*s*C - (v1-Z)/R = (v1-v2)*s*C(X-v3)/(2R) + (v2-v3)/(2R)=v3*2*s*C(v1-v2)*s*C = (v2 -</p>
+        
+    
+    <time datetime="2015-08-10T07:21:24.000Z" itemprop="datePublished">2015-08-10</time>
+  </a>
+</section>
+
+
+
+
+
+
+  
+<section class="post" itemscope itemprop="blogitem">
+  
     <a href="/2015/08/10/HVSP-for-attiny-85/" title="HVSP for attiny-85" itemprop="url">
   
     <h1 itemprop="name">HVSP for attiny-85</h1>
@@ -227,14 +248,12 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
-    <a href="/2015/07/23/deploy-ghost-on-bae/" title="在BAE上部署Ghost开发版" itemprop="url">
+    <a href="/2015/07/23/ndk-link-gnustl_static-problem/" title="ndk链接gnustl_static产生的问题" itemprop="url">
   
-    <h1 itemprop="name">在BAE上部署Ghost开发版</h1>
+    <h1 itemprop="name">ndk链接gnustl_static产生的问题</h1>
     
      
-           <p itemprop="description" >首先申请BAE账号，然后来到BAE控制台添加部署
-注意内存要选256M的，Ghost需要的内存超过140M，代码版本工具选git
-添加私有mysql服务，来到控制台选私有mysql，因为免费的mysql有长连接问题，需要修改到knex module，这里没办法改。网上改连接池数目</p>
+           <p itemprop="description" >今天遇到一个ndk编译的程序运行崩溃的问题，定位到下面的赋值语句会产生奇怪析构错误123*recv_status_ = Status(    static_cast&amp;lt;StatusCode&amp;gt;(status_code_),    status_details_ ? grp</p>
         
     
     <time datetime="2015-07-23T04:07:19.000Z" itemprop="datePublished">2015-07-23</time>
@@ -249,12 +268,14 @@
   
 <section class="post" itemscope itemprop="blogitem">
   
-    <a href="/2015/07/23/ndk-link-gnustl_static-problem/" title="ndk链接gnustl_static产生的问题" itemprop="url">
+    <a href="/2015/07/23/deploy-ghost-on-bae/" title="在BAE上部署Ghost开发版" itemprop="url">
   
-    <h1 itemprop="name">ndk链接gnustl_static产生的问题</h1>
+    <h1 itemprop="name">在BAE上部署Ghost开发版</h1>
     
      
-           <p itemprop="description" >今天遇到一个ndk编译的程序运行崩溃的问题，定位到下面的赋值语句会产生奇怪析构错误123*recv_status_ = Status(    static_cast&amp;lt;StatusCode&amp;gt;(status_code_),    status_details_ ? grp</p>
+           <p itemprop="description" >首先申请BAE账号，然后来到BAE控制台添加部署
+注意内存要选256M的，Ghost需要的内存超过140M，代码版本工具选git
+添加私有mysql服务，来到控制台选私有mysql，因为免费的mysql有长连接问题，需要修改到knex module，这里没办法改。网上改连接池数目</p>
         
     
     <time datetime="2015-07-23T04:07:19.000Z" itemprop="datePublished">2015-07-23</time>

@@ -1,0 +1,407 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>使用d3.js + tSNE做数据可视化 | 奇点2050</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="transinger">
+    
+
+    
+    <meta name="description" content="最近在学习使用word2vec，偶然发现word2vec还可以用来做社交网络关系分析,于是想到是不是可以用word2vec来做一下github上的用户、仓库关系分析，然后用把数据做一下可视化。
+一开始不知道github api里有search功能，可以直接返回复合条件的用户、仓库，后来发现其实很多第三方的github ranking网站，都是用这个功能抓取数据的。这导致我写了个爬虫，通过用户的fo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用d3.js + tSNE做数据可视化">
+<meta property="og:url" content="http://transing.xyz/2016/05/12/using-d3-js-and-tSNE-for-data-visualization/index.html">
+<meta property="og:site_name" content="奇点2050">
+<meta property="og:description" content="最近在学习使用word2vec，偶然发现word2vec还可以用来做社交网络关系分析,于是想到是不是可以用word2vec来做一下github上的用户、仓库关系分析，然后用把数据做一下可视化。
+一开始不知道github api里有search功能，可以直接返回复合条件的用户、仓库，后来发现其实很多第三方的github ranking网站，都是用这个功能抓取数据的。这导致我写了个爬虫，通过用户的fo">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/codeatlas.png">
+<meta property="og:updated_time" content="2016-05-12T10:24:53.862Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用d3.js + tSNE做数据可视化">
+<meta name="twitter:description" content="最近在学习使用word2vec，偶然发现word2vec还可以用来做社交网络关系分析,于是想到是不是可以用word2vec来做一下github上的用户、仓库关系分析，然后用把数据做一下可视化。
+一开始不知道github api里有search功能，可以直接返回复合条件的用户、仓库，后来发现其实很多第三方的github ranking网站，都是用这个功能抓取数据的。这导致我写了个爬虫，通过用户的fo">
+
+    
+    <link rel="alternative" href="/atom.xml" title="奇点2050" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="奇点2050" title="奇点2050"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="奇点2050">奇点2050</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页|Home</a></li>
+					
+						<li><a href="/archives">归档|Archives</a></li>
+					
+						<li><a href="/about">关于|About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:transing.xyz">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/05/12/using-d3-js-and-tSNE-for-data-visualization/" title="使用d3.js + tSNE做数据可视化" itemprop="url">使用d3.js + tSNE做数据可视化</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="transinger" target="_blank" itemprop="author">transinger</a>
+		
+  <p class="article-time">
+    <time datetime="2016-05-12T09:51:11.000Z" itemprop="datePublished"> 发表于 2016-05-12</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<p>最近在学习使用word2vec，偶然发现word2vec还可以用来做<a href="http://arxiv.org/abs/1403.6652" target="_blank" rel="external">社交网络关系分析</a>,<br>于是想到是不是可以用word2vec来做一下github上的用户、仓库关系分析，然后用把数据<br>做一下可视化。</p>
+<p>一开始不知道github api里有search功能，可以直接返回复合条件的用户、仓库，后来<br>发现其实很多第三方的github ranking网站，都是用这个功能抓取数据的。<br>这导致我写了个爬虫，通过用户的followers、following、starred、popular repositories等字段<br>去一个一个抓取关联用户和仓库，爬虫挂vps上大概跑了一个月，下载了大概500G的页面数据，<br>最后抓取了300万用户和400万仓库的比较详细的信息，总的来说虽然这样获取的信息比ranking相关api的数据详细，<br>但是做了大量无用功也是肯定的。</p>
+<p>接下来就是从原始数据中解析出一条一条的语句组成语料库，具体组装语句的办法可以参考deepwalk那篇论文，<br>最后得到120万词向量(因为我的机器运算性能比较弱的关系，<br>实际丢掉了词频10以下的所有词，得到120万个有效词后，跑word2vec能3个小时左右跑完)。</p>
+<p>有了词向量，接下来就是做可视化，比较了PCA和TSNE，据说TSNE能有效的保持数据的结构进行映射，<br>所以使用TSNE将词向量从100维映射到2维。做TSNE的时候，又遇到计算力不足的情况，<br>最后折衷，只抽取14万个词向量做TSNE，跑一趟大概要花6个小时。</p>
+<p>画图的时候，发现python的matplotlib性能实在有点捉急，听说d3.js绘图性能很不错，所以尝试使用<br>d3.js画一下图。</p>
+<p>主要代码如下：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">d3.json(<span class="string">"/data/result-5000.dat"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">error, json</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (error)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">console</span>.warn(error);</span><br><span class="line"></span><br><span class="line">    json.data.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">d</span>) </span>&#123;</span><br><span class="line">        languages[d.language] = <span class="literal">true</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//这里设置xscale和yscale的范围，extent函数返回一个数组的最大最小值</span></span><br><span class="line">    xscale.domain(d3.extent(json.data, <span class="function"><span class="keyword">function</span>(<span class="params">d</span>) </span>&#123; <span class="keyword">return</span> d.xy[<span class="number">0</span>]; &#125;));</span><br><span class="line">    yscale.domain(d3.extent(json.data, <span class="function"><span class="keyword">function</span>(<span class="params">d</span>) </span>&#123; <span class="keyword">return</span> d.xy[<span class="number">1</span>]; &#125;));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> zoom = d3.behavior.zoom()</span><br><span class="line">        .x(xscale)</span><br><span class="line">        .y(yscale)</span><br><span class="line">        .scaleExtent([<span class="number">0</span>, <span class="number">50</span>]) <span class="comment">//缩放范围</span></span><br><span class="line">        .on(<span class="string">"zoom"</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="comment">//这里是困惑了比较久的地方，因为发现d3.js在缩放的时候，连字体、绘点也一起放大了</span></span><br><span class="line">            <span class="comment">//所以这里只针对文字、绘点的坐标进行操作</span></span><br><span class="line">            d3.select(<span class="keyword">this</span>).selectAll(<span class="string">"circle"</span>).attr(<span class="string">"cx"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">d</span>) </span>&#123; <span class="keyword">return</span> xscale(d.xy[<span class="number">0</span>])&#125;);</span><br><span class="line">            d3.select(<span class="keyword">this</span>).selectAll(<span class="string">"circle"</span>).attr(<span class="string">"cy"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">d</span>) </span>&#123; <span class="keyword">return</span> yscale(d.xy[<span class="number">1</span>])&#125;);</span><br><span class="line">            d3.select(<span class="keyword">this</span>).selectAll(<span class="string">"text"</span>).attr(<span class="string">"x"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">d</span>) </span>&#123; <span class="keyword">return</span> xscale(d.xy[<span class="number">0</span>])&#125;);</span><br><span class="line">            d3.select(<span class="keyword">this</span>).selectAll(<span class="string">"text"</span>).attr(<span class="string">"y"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">d</span>) </span>&#123; <span class="keyword">return</span> yscale(d.xy[<span class="number">1</span>])&#125;);</span><br><span class="line">        &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> svg = d3.select(<span class="string">"body"</span>)</span><br><span class="line">        .append(<span class="string">"svg"</span>)</span><br><span class="line">        .attr(<span class="string">"width"</span>, width + margin.left + margin.right)</span><br><span class="line">        .attr(<span class="string">"height"</span>, height + margin.top + margin.bottom)</span><br><span class="line">        .attr(<span class="string">"transform"</span>, <span class="string">"translate("</span> + margin.left + <span class="string">","</span> + margin.top + <span class="string">")"</span>)</span><br><span class="line">        .call(zoom)</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">var</span> points = svg.selectAll(<span class="string">".dot"</span>)</span><br><span class="line">        .data(json.data)</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">    <span class="keyword">var</span> pointEnter = points.enter().append(<span class="string">"g"</span>)</span><br><span class="line"></span><br><span class="line">    pointEnter.append(<span class="string">"circle"</span>)</span><br><span class="line">        .attr(<span class="string">"r"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">d</span>) </span>&#123; </span><br><span class="line">                <span class="keyword">if</span> (languages[d.word] != <span class="literal">undefined</span>)</span><br><span class="line">                    <span class="keyword">return</span> <span class="number">4.0</span>;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    <span class="keyword">return</span> <span class="number">1.0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        )</span><br><span class="line">        .attr(<span class="string">"cx"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">d</span>) </span>&#123; <span class="keyword">return</span> xscale(d.xy[<span class="number">0</span>])&#125;)</span><br><span class="line">        .attr(<span class="string">"cy"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">d</span>) </span>&#123; <span class="keyword">return</span> yscale(d.xy[<span class="number">1</span>]) + <span class="number">10</span>&#125;)</span><br><span class="line">        .style(<span class="string">"fill"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">d</span>) </span>&#123; <span class="keyword">return</span> stringToColor(d.language)&#125;)</span><br><span class="line">        .classed(<span class="string">"dot"</span>, <span class="literal">true</span>)</span><br><span class="line"></span><br><span class="line">    pointEnter.append(<span class="string">"text"</span>)</span><br><span class="line">        .filter(<span class="function"><span class="keyword">function</span>(<span class="params">d</span>) </span>&#123; <span class="keyword">return</span> languages[d.word] != <span class="literal">undefined</span>&#125;) <span class="comment">//只显示程序语言</span></span><br><span class="line">        .attr(<span class="string">"x"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">d</span>) </span>&#123; <span class="keyword">return</span> xscale(d.xy[<span class="number">0</span>]); &#125;)</span><br><span class="line">        .attr(<span class="string">"y"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">d</span>) </span>&#123; <span class="keyword">return</span> yscale(d.xy[<span class="number">1</span>]) + <span class="number">10</span>; &#125;)</span><br><span class="line">        .text(<span class="function"><span class="keyword">function</span>(<span class="params">d</span>)</span>&#123; <span class="keyword">return</span> d.word&#125;)</span><br><span class="line">        .classed(<span class="string">"dot"</span>, <span class="literal">true</span>)</span><br></pre></td></tr></table></figure></p>
+<p>python绘图也一起贴上：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gensim</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">from</span> sets <span class="keyword">import</span> Set</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn.manifold <span class="keyword">import</span> TSNE</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">draw_words</span><span class="params">(model, words, languages)</span>:</span></span><br><span class="line">    <span class="comment"># get vectors for given words from model</span></span><br><span class="line"></span><br><span class="line">    vectors = [model[word] <span class="keyword">for</span> word <span class="keyword">in</span> words]</span><br><span class="line">     </span><br><span class="line">    tsne = TSNE(n_components=<span class="number">2</span>, random_state=<span class="number">0</span>, verbose=<span class="number">99</span>, n_iter=<span class="number">50</span>)</span><br><span class="line">    vectors2d = tsne.fit_transform(vectors)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">print</span> <span class="string">'t-SNE done!'</span></span><br><span class="line">    c = <span class="string">'red'</span>;</span><br><span class="line">    <span class="comment"># draw image</span></span><br><span class="line">    plt.figure(figsize=(<span class="number">6</span>,<span class="number">6</span>))</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> point, word <span class="keyword">in</span> zip(vectors2d , words):</span><br><span class="line">        <span class="comment"># plot points</span></span><br><span class="line">        <span class="keyword">if</span> (word <span class="keyword">in</span> languages):</span><br><span class="line">            c = <span class="string">'blue'</span>;</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            c = <span class="string">'red'</span>;</span><br><span class="line">            </span><br><span class="line">        plt.scatter(point[<span class="number">0</span>], point[<span class="number">1</span>], color = c)</span><br><span class="line">        <span class="comment"># plot word annotations</span></span><br><span class="line">        <span class="keyword">if</span> (word <span class="keyword">in</span> languages):</span><br><span class="line">            plt.annotate(</span><br><span class="line">                word, </span><br><span class="line">                xy = (point[<span class="number">0</span>], point[<span class="number">1</span>]),</span><br><span class="line">                xytext = (-<span class="number">7</span>, -<span class="number">6</span>),</span><br><span class="line">                textcoords = <span class="string">'offset points'</span>,</span><br><span class="line">                ha = <span class="string">'right'</span>,</span><br><span class="line">                va = <span class="string">'bottom'</span>,</span><br><span class="line">                size = <span class="string">"x-large"</span></span><br><span class="line">            )    </span><br><span class="line">    plt.tight_layout()</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line"><span class="comment"># get trained model</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">'loading model'</span></span><br><span class="line">model = gensim.models.Word2Vec.load_word2vec_format(<span class="string">'./result.bin'</span>,binary=<span class="keyword">True</span>)</span><br><span class="line">words = Set()</span><br><span class="line">languages = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">'done!'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#这里是程序语言数组，以及每种语言所占比例</span></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">'languages.json'</span>) <span class="keyword">as</span> langs_data:    </span><br><span class="line">    langs = json.load(langs_data)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> lang <span class="keyword">in</span> langs:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'processing '</span> + lang</span><br><span class="line">    languages.append(lang)</span><br><span class="line">    <span class="comment">#按照语言所占比例，返回word2vec模型中和语言最相似的词向量</span></span><br><span class="line">    ws = model.most_similar(positive = [lang], topn = langs[lang] + <span class="number">50</span>)</span><br><span class="line">    ws = zip(*ws)[<span class="number">0</span>]</span><br><span class="line">    words |= Set(ws); //用集合防止重复</span><br><span class="line"></span><br><span class="line">draw_words(model, list(words), languages)</span><br></pre></td></tr></table></figure>
+<p>最后，来一个<a href="transing.xyz/codeatlas.html">成果展示</a>(只显示5000个词向量，因为数据比较大，所以网络慢的话需要稍等):<br><img src="http://transing.bj.bcebos.com/image/codeatlas.png" alt=""></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://transing.xyz/2016/05/12/using-d3-js-and-tSNE-for-data-visualization/" data-title="使用d3.js + tSNE做数据可视化 | 奇点2050" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2016/05/12/using-tor-for-crawler/"  title="在爬虫中使用tor切换出口ip">
+ <strong>下一篇：</strong><br/> 
+ <span>在爬虫中使用tor切换出口ip
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/05/12/using-d3-js-and-tSNE-for-data-visualization/" data-title="使用d3.js + tSNE做数据可视化" data-url="http://transing.xyz/2016/05/12/using-d3-js-and-tSNE-for-data-visualization/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:qdk0901@qq.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="transinger">transinger</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"transing"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256120787'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1256120787' type='text/javascript'%3E%3C/script%3E"));</script>
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
