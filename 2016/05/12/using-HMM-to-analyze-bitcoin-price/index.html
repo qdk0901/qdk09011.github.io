@@ -1,0 +1,407 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>用HMM分析比特币价格 | 奇点2050</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="transinger">
+    
+
+    
+    <meta name="description" content="看到这里用HMM分析沪深300价格走势，所以用比特币价格走势来练习一下HMM
+那篇文章里的代码可以直接在joinquant研究面板进行调试，ipython交互式测试代码的方式非常方便
+比特币价格数据来自btcc apihttps://data.btcchina.com/data/historydata对btcc的历史数据稍微研究了一下，发现大概有6800万次的交易，其中2015年1月到现在就有接近">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用HMM分析比特币价格">
+<meta property="og:url" content="http://transing.xyz/2016/05/12/using-HMM-to-analyze-bitcoin-price/index.html">
+<meta property="og:site_name" content="奇点2050">
+<meta property="og:description" content="看到这里用HMM分析沪深300价格走势，所以用比特币价格走势来练习一下HMM
+那篇文章里的代码可以直接在joinquant研究面板进行调试，ipython交互式测试代码的方式非常方便
+比特币价格数据来自btcc apihttps://data.btcchina.com/data/historydata对btcc的历史数据稍微研究了一下，发现大概有6800万次的交易，其中2015年1月到现在就有接近">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/btcc_latent1.png">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/btcc_latent.png">
+<meta property="og:updated_time" content="2016-05-12T09:16:38.263Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用HMM分析比特币价格">
+<meta name="twitter:description" content="看到这里用HMM分析沪深300价格走势，所以用比特币价格走势来练习一下HMM
+那篇文章里的代码可以直接在joinquant研究面板进行调试，ipython交互式测试代码的方式非常方便
+比特币价格数据来自btcc apihttps://data.btcchina.com/data/historydata对btcc的历史数据稍微研究了一下，发现大概有6800万次的交易，其中2015年1月到现在就有接近">
+
+    
+    <link rel="alternative" href="/atom.xml" title="奇点2050" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="奇点2050" title="奇点2050"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="奇点2050">奇点2050</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页|Home</a></li>
+					
+						<li><a href="/archives">归档|Archives</a></li>
+					
+						<li><a href="/about">关于|About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:transing.xyz">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/05/12/using-HMM-to-analyze-bitcoin-price/" title="用HMM分析比特币价格" itemprop="url">用HMM分析比特币价格</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="transinger" target="_blank" itemprop="author">transinger</a>
+		
+  <p class="article-time">
+    <time datetime="2016-05-12T09:00:45.000Z" itemprop="datePublished"> 发表于 2016-05-12</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<p>看到<a href="https://zhuanlan.zhihu.com/p/20727973" target="_blank" rel="external">这里</a>用HMM分析沪深300价格走势，<br>所以用比特币价格走势来练习一下HMM</p>
+<p>那篇文章里的代码可以直接在<a href="https://www.joinquant.com/research" target="_blank" rel="external">joinquant研究面板</a><br>进行调试，ipython交互式测试代码的方式非常方便</p>
+<p>比特币价格数据来自<a href="">btcc api</a><a href="https://data.btcchina.com/data/historydata" target="_blank" rel="external">https://data.btcchina.com/data/historydata</a><br>对btcc的历史数据稍微研究了一下，发现大概有6800万次的交易，其中2015年1月到现在<br>就有接近4800万次，所以把这段时间的数据抓下来就好了，因为数据实在是太多，所以每1000次交易<br>只取一次用作分析，通算下来就是一个小时平均10次左右。<br>数据我已经传到了<a href="http://transing.bj.bcebos.com/data/btcc.json" target="_blank" rel="external">这里</a>,方便后面又需要的人直接下载。</p>
+<p>主要代码如下：<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">from hmmlearn.hmm <span class="built_in">import</span> GaussianHMM</span><br><span class="line"><span class="built_in">import</span> datetime</span><br><span class="line"><span class="built_in">import</span> numpy as np</span><br><span class="line">from matplotlib <span class="built_in">import</span> cm</span><br><span class="line">from matplotlib <span class="built_in">import</span> pyplot as plt</span><br><span class="line"><span class="built_in">import</span> json</span><br><span class="line"><span class="built_in">import</span> datetime as dt</span><br><span class="line"><span class="built_in">import</span> pandas as pd</span><br><span class="line"></span><br><span class="line">with open<span class="params">('btcc.json')</span> as btcc:</span><br><span class="line">    records = json.load<span class="params">(btcc)</span></span><br><span class="line"></span><br><span class="line">price = []</span><br><span class="line">date = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> r in records:</span><br><span class="line">    date.append<span class="params">(dt.datetime.fromtimestamp<span class="params">(r['date'])</span>)</span></span><br><span class="line">    price.append<span class="params">(r['price'])</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">logreturn = <span class="params">(np.log<span class="params">(np.array<span class="params">(price[<span class="number">1</span>:])</span>)</span>-np.log<span class="params">(np.array<span class="params">(price[:-<span class="number">1</span>])</span>)</span>)</span>[<span class="number">4</span>:]</span><br><span class="line"></span><br><span class="line">X = np.column_stack<span class="params">([logreturn])</span></span><br><span class="line">hmm = GaussianHMM<span class="params">(n_components=<span class="number">6</span>, covariance_type='diag', n_iter=<span class="number">5000</span>)</span>.fit<span class="params">(X)</span></span><br><span class="line">latent_states_sequence = hmm.predict<span class="params">(X)</span></span><br><span class="line"></span><br><span class="line">date = np.array<span class="params">(date[<span class="number">5</span>:])</span></span><br><span class="line">price = np.array<span class="params">(price[<span class="number">5</span>:])</span></span><br><span class="line"></span><br><span class="line">plt.figure<span class="params">(figsize = <span class="params">(<span class="number">15</span>, <span class="number">8</span>)</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i in range<span class="params">(hmm.n_components)</span>:</span><br><span class="line">    state = <span class="params">(latent_states_sequence == i)</span></span><br><span class="line">    plt.plot<span class="params">(date[state], price[state],'.',label = 'latent state %d'%i,lw = <span class="number">1</span>)</span></span><br><span class="line">    plt.legend<span class="params">()</span></span><br><span class="line">    plt.grid<span class="params">(<span class="number">1</span>)</span></span><br><span class="line"></span><br><span class="line">data = pd.DataFrame<span class="params">(&#123;'date':date, 'logreturn':logreturn&#125;)</span>.set_index<span class="params">('date')</span></span><br><span class="line"></span><br><span class="line">plt.figure<span class="params">(figsize=<span class="params">(<span class="number">15</span>,<span class="number">8</span>)</span>)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i in range<span class="params">(hmm.n_components)</span>:</span><br><span class="line">    state = <span class="params">(latent_states_sequence == i)</span></span><br><span class="line">    idx = np.append<span class="params">(<span class="number">0</span>,state[:-<span class="number">1</span>])</span></span><br><span class="line">    </span><br><span class="line">    data['price <span class="built_in">%</span>d_return'<span class="built_in">%</span>i] = data.logreturn.multiply<span class="params">(idx,axis = <span class="number">0</span>)</span></span><br><span class="line">    </span><br><span class="line">    plt.plot<span class="params">(np.exp<span class="params">(data['price %d_return' %i].cumsum<span class="params">()</span>)</span>,label = 'latent_state %d'%i)</span></span><br><span class="line">    plt.legend<span class="params">()</span></span><br><span class="line">    plt.grid<span class="params">(<span class="number">1</span>)</span></span><br><span class="line">    </span><br><span class="line">plt.tight_layout<span class="params">()</span></span><br><span class="line">plt.show<span class="params">()</span></span><br></pre></td></tr></table></figure></p>
+<p>效果图：<br><img src="http://transing.bj.bcebos.com/image/btcc_latent1.png" alt=""><br><img src="http://transing.bj.bcebos.com/image/btcc_latent.png" alt=""></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://transing.xyz/2016/05/12/using-HMM-to-analyze-bitcoin-price/" data-title="用HMM分析比特币价格 | 奇点2050" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2016/01/27/porting-iotjs-to-openwrt/"  title="porting iotjs to openwrt">
+ <strong>下一篇：</strong><br/> 
+ <span>porting iotjs to openwrt
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/05/12/using-HMM-to-analyze-bitcoin-price/" data-title="用HMM分析比特币价格" data-url="http://transing.xyz/2016/05/12/using-HMM-to-analyze-bitcoin-price/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:qdk0901@qq.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="transinger">transinger</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"transing"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256120787'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1256120787' type='text/javascript'%3E%3C/script%3E"));</script>
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

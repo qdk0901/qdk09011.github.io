@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://transing.xyz/2016/05/12/using-HMM-to-analyze-bitcoin-price/</loc>
+    <lastmod>2016-05-12T09:16:38.263Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://transing.xyz/data/lottery.json</loc>
     <lastmod>2016-04-30T05:41:18.226Z</lastmod>
   </url>
