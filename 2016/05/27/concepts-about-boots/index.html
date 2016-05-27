@@ -1,0 +1,490 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>arm boot流程 | 奇点2050</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="transinger">
+    
+
+    
+    <meta name="description" content="1.uboot的几个阶段参考
+ a. bl0,固化在irom里的，根据OM管脚决定从启动设备的顺序，
+ b. bl1,
+ c. bl2, 也就是uboot SPL(Secondary program loader)
+ d. uboot
+ c. kernel
+2.bl2做了哪些动作（start.s里lowlevel_init）
+ a. 检测是否warmboot，是的话，通过SMC指令跳转到CONFI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="arm boot流程">
+<meta property="og:url" content="http://transing.xyz/2016/05/27/concepts-about-boots/index.html">
+<meta property="og:site_name" content="奇点2050">
+<meta property="og:description" content="1.uboot的几个阶段参考
+ a. bl0,固化在irom里的，根据OM管脚决定从启动设备的顺序，
+ b. bl1,
+ c. bl2, 也就是uboot SPL(Secondary program loader)
+ d. uboot
+ c. kernel
+2.bl2做了哪些动作（start.s里lowlevel_init）
+ a. 检测是否warmboot，是的话，通过SMC指令跳转到CONFI">
+<meta property="og:updated_time" content="2016-05-27T07:57:04.703Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="arm boot流程">
+<meta name="twitter:description" content="1.uboot的几个阶段参考
+ a. bl0,固化在irom里的，根据OM管脚决定从启动设备的顺序，
+ b. bl1,
+ c. bl2, 也就是uboot SPL(Secondary program loader)
+ d. uboot
+ c. kernel
+2.bl2做了哪些动作（start.s里lowlevel_init）
+ a. 检测是否warmboot，是的话，通过SMC指令跳转到CONFI">
+
+    
+    <link rel="alternative" href="/atom.xml" title="奇点2050" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="奇点2050" title="奇点2050"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="奇点2050">奇点2050</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页|Home</a></li>
+					
+						<li><a href="/archives">归档|Archives</a></li>
+					
+						<li><a href="/about">关于|About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:transing.xyz">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/05/27/concepts-about-boots/" title="arm boot流程" itemprop="url">arm boot流程</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="transinger" target="_blank" itemprop="author">transinger</a>
+		
+  <p class="article-time">
+    <time datetime="2016-05-27T04:20:59.000Z" itemprop="datePublished"> 发表于 2016-05-27</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<p>1.uboot的几个阶段<br><a href="http://www.slideshare.net/HouchengLin/uboot-startup-sequence" target="_blank" rel="external">参考</a></p>
+<p> a. bl0,固化在irom里的，根据OM管脚决定从启动设备的顺序，</p>
+<p> b. bl1,</p>
+<p> c. bl2, 也就是uboot SPL(Secondary program loader)</p>
+<p> d. uboot</p>
+<p> c. kernel</p>
+<p>2.bl2做了哪些动作（start.s里lowlevel_init）</p>
+<p> a. 检测是否warmboot，是的话，通过SMC指令跳转到CONFIG_PHY_IRAM_NS_BASE去，<br> 这个地址有一段代码，是relocate_nscode过程拷贝过去的，属于non secure code，<br> 所以需要通过SMC指令去跳转。这段nscode主要干下面的事情</p>
+<blockquote>
+<ul>
+<li><ul>
+<li>Step-1: Read current CPU status.</li>
+</ul>
+</li>
+<li><ul>
+<li>Step-2: If it’s a resume then continue, else jump to step 4.</li>
+</ul>
+</li>
+<li><ul>
+<li>Step-3: Clear inform1 PMU register and jump to inform0 value.</li>
+</ul>
+</li>
+<li><ul>
+<li>Step-4: If it’s a switch, C2 or reset, get the hotplug address.</li>
+</ul>
+</li>
+<li><ul>
+<li>Step-5: If address is not available, enter WFE.</li>
+</ul>
+</li>
+<li><ul>
+<li>Step-6: If address is available, jump to that address</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p>C2 state是IDLE状态，借用的应该是ACPI规范里的定义，<br>这个状态下，CPU时钟是处于停止状态<br>主CPU初始化，其余CPU通过进入死循环(WFE)，等待主CPU唤醒</p>
+<p> b. 初始化系统时钟，初始化内存<br>   初始化APLL、MPLL、BPLL、CPLL、KPLL、DPLL等各种PLL</p>
+<p>   APLL：产生大核的时钟</p>
+<p>   KPLL：产生小核的时钟</p>
+<p>   BPLL：产生内存控制器的时钟</p>
+<p>   MPLL：G2D、SSS的时钟</p>
+<p>   CPLL：MFC的时钟，MFC：multi format codec</p>
+<p>   DPLL：DISPLAY的时钟</p>
+<p>   EPLL：Audio的时钟</p>
+<p>   VPLL：video相关的时钟</p>
+<p>   内存初始化：时钟、CAS latency，Burst latency、write laten等等的设置</p>
+<p>   非必需项：</p>
+<p>   设置mmu table</p>
+<p> c. 初始化uart</p>
+<p> d. 跳转到board_init_f(该函数位于arm/lib/board.c),f的意思是flash的意思</p>
+<p> 按照init_sequence函数表里的函数逐项调用<br> <figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"> init_fnc_t *init_sequence[] = &#123;</span><br><span class="line">	arch_cpu_init,		<span class="comment">/* basic arch cpu dependent setup */</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#if defined(CONFIG_BOARD_EARLY_INIT_F)</span></span><br><span class="line">	board_early_init_f,</span><br><span class="line"><span class="preprocessor">#endif</span></span><br><span class="line"><span class="preprocessor">#ifdef CONFIG_OF_CONTROL</span></span><br><span class="line">	fdtdec_check_fdt,</span><br><span class="line"><span class="preprocessor">#endif</span></span><br><span class="line">	timer_init,		<span class="comment">/* initialize timer */</span></span><br><span class="line"><span class="preprocessor">#ifdef CONFIG_FSL_ESDHC</span></span><br><span class="line">	get_clocks,</span><br><span class="line"><span class="preprocessor">#endif</span></span><br><span class="line">	env_init,		<span class="comment">/* initialize environment */</span></span><br><span class="line"><span class="preprocessor">#ifndef CONFIG_CPU_EXYNOS5410</span></span><br><span class="line">	init_baudrate,		<span class="comment">/* initialze baudrate settings */</span></span><br><span class="line">	serial_init,		<span class="comment">/* serial communications setup */</span></span><br><span class="line"><span class="preprocessor">#endif</span></span><br><span class="line">	console_init_f,		<span class="comment">/* stage 1 init of console */</span></span><br><span class="line">	display_banner,		<span class="comment">/* say that we are here */</span></span><br><span class="line"><span class="preprocessor">#if defined(CONFIG_DISPLAY_CPUINFO)</span></span><br><span class="line">	print_cpuinfo,		<span class="comment">/* display cpu info (and speed) */</span></span><br><span class="line"><span class="preprocessor">#endif</span></span><br><span class="line"><span class="preprocessor">#if defined(CONFIG_DISPLAY_BOARDINFO)</span></span><br><span class="line">	checkboard,		<span class="comment">/* display board info */</span></span><br><span class="line"><span class="preprocessor">#endif</span></span><br><span class="line"><span class="preprocessor">#if defined(CONFIG_HARD_I2C) || defined(CONFIG_SOFT_I2C)</span></span><br><span class="line">	init_func_i2c,</span><br><span class="line"><span class="preprocessor">#endif</span></span><br><span class="line">	dram_init,		<span class="comment">/* configure available RAM banks */</span></span><br><span class="line">	NULL,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>f. 重定向uboot，然后跑board_init_r(r的意思是ram)<br>g. 进入main_loop</p>
+<p>2.trust boot流程，基于信任链的验证</p>
+<p>a. PUK(public key)在bl0里，是固化好的，无法替换掉</p>
+<p>b. 私有密钥用来给BL1和BL2签名，BL0使用公钥验证签名，保证BL1、BL2没被修改</p>
+<p>c. bl1和bl2设置保护，加载TZSW，然后切换到secure world</p>
+<p>3.secondary cpu初始化<br> secondary cpu进入WFE循环后就等待CPU0唤醒，<br> 安装hyper stubs，进入SVC32模式，然后执行<br> SMP 初始化过程</p>
+<p>4.kernel初始化</p>
+<p> uboot运行boot command，定义如下:</p>
+<p> <code>#define CONFIG_BOOTCOMMAND    &quot;movi read kernel 0 40008000;movi read rootfs 0 41000000 100000;bootz 40008000 41000000&quot;</code></p>
+<p> 最后，调用do_bootm_linux，跳转到kernel入口函数，<br> uboot会两个参数给kernel，一个是machine id，另一个是boot 参数</p>
+<p> arm上kernel的入口函数在<br> arch\arm\boot\compressed\head.S里定义，也就是start过程</p>
+<p> uboot给kernel的两个参数，通过r1、r2进行传递</p>
+<p> a.<br> <figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">start</span>入口的第一个跳转，到这里保存machine id和atags指针</span><br><span class="line"><span class="number">1</span>:		<span class="keyword">mov	</span><span class="literal">r7</span>, <span class="literal">r1</span>			<span class="comment">@ save architecture ID</span></span><br><span class="line">	<span class="keyword">mov	</span><span class="literal">r8</span>, <span class="literal">r2</span>			<span class="comment">@ save atags pointer</span></span><br></pre></td></tr></table></figure></p>
+<p> b. 调用cache_on flush cache，<br>  通过不同的cpu id，执行不同的mmu初始化函数</p>
+<p> c. 调用decompress_kernel解压kernel，关闭cache，然后跳转平台相关的入口，<br> arm上该入口位于<br> <code>arch\arm\kernel\head.S</code></p>
+<p> 这里会查找processor type和machine type，machine type也就是根据uboot传入的<br> machine id进行查找</p>
+<p> machine表在<br> <code>arch\arm\tools\mach-types</code>里定义</p>
+<p> d. 创建页表，重新开启mmu，最后跳转到start_kernel里(位于init\main.c)，注意这时候还是在CPU0</p>
+<p> e. start_kernel流程</p>
+ <figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"> asmlinkage void __init start_kernel<span class="params">(void)</span></span><br><span class="line">&#123;</span><br><span class="line">	char <span class="built_in">*</span> command_line;</span><br><span class="line">	extern const struct kernel_param __start___param[], __stop___param[];</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span><br><span class="line">	 * Need to run as early as possible, to initialize the</span><br><span class="line">	 * lockdep hash:</span><br><span class="line">	 */</span></span><br><span class="line">	lockdep_init<span class="params">()</span>;</span><br><span class="line">	smp_setup_processor_id<span class="params">()</span>;</span><br><span class="line">	debug_objects_early_init<span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span><br><span class="line">	 * Set up the the initial canary ASAP:</span><br><span class="line">	 */</span></span><br><span class="line">	boot_init_stack_canary<span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">	cgroup_init_early<span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">	local_irq_disable<span class="params">()</span>;</span><br><span class="line">	early_boot_irqs_disabled = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span><br><span class="line"> * Interrupts are still disabled. Do necessary setups, then</span><br><span class="line"> * enable them</span><br><span class="line"> */</span></span><br><span class="line">	tick_init<span class="params">()</span>;</span><br><span class="line">	boot_cpu_init<span class="params">()</span>;</span><br><span class="line">	page_address_init<span class="params">()</span>;</span><br><span class="line">	printk<span class="params">(KERN_NOTICE <span class="string">"%s"</span>, linux_banner)</span>;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//setup_arch是平台相关的，arm上位于arch/arm/kernel/setup.c里</span></span><br><span class="line">    setup_arch<span class="params">(&amp;command_line)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//....省略</span></span><br><span class="line">    </span><br><span class="line">    rest_init<span class="params">()</span>;</span><br><span class="line">    <span class="comment">//rest_init</span></span><br><span class="line">      --kernel_init</span><br><span class="line">      ----do_basic_setup</span><br><span class="line">      ------do_initcalls</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> f. 各种init call的优先级<br> <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">static</span> <span class="keyword">initcall_t</span> *initcall_levels[] __initdata = &#123;</span><br><span class="line">	__initcall0_start,</span><br><span class="line">	__initcall1_start,</span><br><span class="line">	__initcall2_start,</span><br><span class="line">	__initcall3_start,</span><br><span class="line">	__initcall4_start,</span><br><span class="line">	__initcall5_start,</span><br><span class="line">	__initcall6_start,</span><br><span class="line">	__initcall7_start,</span><br><span class="line">	__initcall_end,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">char</span> *initcall_level_names[] __initdata = &#123;</span><br><span class="line">	<span class="string">"early parameters"</span>,</span><br><span class="line">	<span class="string">"core parameters"</span>,</span><br><span class="line">	<span class="string">"postcore parameters"</span>,</span><br><span class="line">	<span class="string">"arch parameters"</span>,</span><br><span class="line">	<span class="string">"subsys parameters"</span>,</span><br><span class="line">	<span class="string">"fs parameters"</span>,</span><br><span class="line">	<span class="string">"device parameters"</span>,</span><br><span class="line">	<span class="string">"late parameters"</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>g. kernel_init的最后，执行init_post，这里初始化完ramdisk，会尝试执行指定的<br>用户空间init程序</p>
+<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="params">(ramdisk_execute_command)</span> &#123;</span><br><span class="line">	run_init_process<span class="params">(ramdisk_execute_command)</span>;</span><br><span class="line">	printk<span class="params">(KERN_WARNING <span class="string">"Failed to execute %s\n"</span>,</span><br><span class="line">			ramdisk_execute_command)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span><br><span class="line"> * We try each of these until one succeeds.</span><br><span class="line"> *</span><br><span class="line"> * The Bourne shell can be used instead of init if we are</span><br><span class="line"> * trying to recover a really broken machine.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">if</span> <span class="params">(execute_command)</span> &#123;</span><br><span class="line">	run_init_process<span class="params">(execute_command)</span>;</span><br><span class="line">	printk<span class="params">(KERN_WARNING <span class="string">"Failed to execute %s.  Attempting "</span></span><br><span class="line">				<span class="string">"defaults...\n"</span>, execute_command)</span>;</span><br><span class="line">&#125;</span><br><span class="line">run_init_process<span class="params">(<span class="string">"/sbin/init"</span>)</span>;</span><br><span class="line">run_init_process<span class="params">(<span class="string">"/etc/init"</span>)</span>;</span><br><span class="line">run_init_process<span class="params">(<span class="string">"/bin/init"</span>)</span>;</span><br><span class="line">run_init_process<span class="params">(<span class="string">"/bin/sh"</span>)</span>;</span><br><span class="line"></span><br><span class="line">panic<span class="params">(<span class="string">"No init found.  Try passing init= option to kernel. "</span></span><br><span class="line">      <span class="string">"See Linux Documentation/init.txt for guidance."</span>)</span>;</span><br></pre></td></tr></table></figure>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://transing.xyz/2016/05/27/concepts-about-boots/" data-title="arm boot流程 | 奇点2050" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2016/05/12/using-d3-js-and-tSNE-for-data-visualization/"  title="使用d3.js + tSNE做数据可视化">
+ <strong>下一篇：</strong><br/> 
+ <span>使用d3.js + tSNE做数据可视化
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/05/27/concepts-about-boots/" data-title="arm boot流程" data-url="http://transing.xyz/2016/05/27/concepts-about-boots/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:qdk0901@qq.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="transinger">transinger</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"transing"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256120787'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1256120787' type='text/javascript'%3E%3C/script%3E"));</script>
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
