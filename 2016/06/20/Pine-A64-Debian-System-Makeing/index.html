@@ -1,0 +1,451 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Pine A64 Debian System Makeing | 奇点2050</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="transinger">
+    
+
+    
+    <meta name="description" content="A64的镜像分区示意图
+boot0.bin:是由全志提供的，没有开源
+uboot由四个组成部分，其中scp.bin是由全志提供的。bl31.bin由于从https://github.com/apritzel/arm-trusted-firmware.git编译出来的镜像不能启动板子，所以现在用的是A64 BSP里的bl31.bin。dtb文件是用dtc编译DTS板级文件得到的，DTS则是从BSP固">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pine A64 Debian System Makeing">
+<meta property="og:url" content="http://transing.xyz/2016/06/20/Pine-A64-Debian-System-Makeing/index.html">
+<meta property="og:site_name" content="奇点2050">
+<meta property="og:description" content="A64的镜像分区示意图
+boot0.bin:是由全志提供的，没有开源
+uboot由四个组成部分，其中scp.bin是由全志提供的。bl31.bin由于从https://github.com/apritzel/arm-trusted-firmware.git编译出来的镜像不能启动板子，所以现在用的是A64 BSP里的bl31.bin。dtb文件是用dtc编译DTS板级文件得到的，DTS则是从BSP固">
+<meta property="og:image" content="http://transing.bj.bcebos.com/image/pine64/pine64-parition.jpg">
+<meta property="og:updated_time" content="2016-06-19T23:03:34.866Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pine A64 Debian System Makeing">
+<meta name="twitter:description" content="A64的镜像分区示意图
+boot0.bin:是由全志提供的，没有开源
+uboot由四个组成部分，其中scp.bin是由全志提供的。bl31.bin由于从https://github.com/apritzel/arm-trusted-firmware.git编译出来的镜像不能启动板子，所以现在用的是A64 BSP里的bl31.bin。dtb文件是用dtc编译DTS板级文件得到的，DTS则是从BSP固">
+
+    
+    <link rel="alternative" href="/atom.xml" title="奇点2050" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="奇点2050" title="奇点2050"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="奇点2050">奇点2050</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">主页|Home</a></li>
+					
+						<li><a href="/archives">归档|Archives</a></li>
+					
+						<li><a href="/about">关于|About</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:transing.xyz">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/06/20/Pine-A64-Debian-System-Makeing/" title="Pine A64 Debian System Makeing" itemprop="url">Pine A64 Debian System Makeing</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="transinger" target="_blank" itemprop="author">transinger</a>
+		
+  <p class="article-time">
+    <time datetime="2016-06-19T23:02:48.000Z" itemprop="datePublished"> 发表于 2016-06-20</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<h3 id="A64的镜像分区示意图">A64的镜像分区示意图</h3><p><img src="http://transing.bj.bcebos.com/image/pine64/pine64-parition.jpg" alt=""></p>
+<p>boot0.bin:是由全志提供的，没有开源</p>
+<p>uboot由四个组成部分，其中scp.bin是由全志提供的。bl31.bin由于从<code>https://github.com/apritzel/arm-trusted-firmware.git</code><br>编译出来的镜像不能启动板子，所以现在用的是A64 BSP里的bl31.bin。dtb文件是用dtc编译DTS板级文件得到的，<br>DTS则是从BSP固件用fdtdump反编译出来的。</p>
+<p>kernel的话有两种选择，一种是mainline kernel，版本是4.6以上，这个kernel会缺少lcd、camera等驱动；<br>另一种是BSP kernel，驱动都比较齐全，版本是3.10。</p>
+<p>ramdisk是用busybox制作的，主要用来挂载rootfs并且执行位于rootfs下的/sbin/init程序</p>
+<p>kernel和ramdisk都以文件的形式放置在FAT分区内，同时放在FAT分区内的还有dtb文件<br>（注意，dtb是uboot和kernel都会用到的，所以一个合并到uboot里，另一个放置于FAT分区内方便修改）</p>
+<p>rootfs：这里主要是ubuntu或者debian的系统文件，以ext4分区的形式存在</p>
+<h3 id="A64镜像各部分分步编译">A64镜像各部分分步编译</h3><p>虽然最后会有脚本一键完成各个镜像的编译，这里还是要分步解释一下各个编译步骤：</p>
+<p>1) uboot的编译</p>
+<p>首先是需要安装gcc-arm-linux-gnueabihf</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">sudo</span> apt-<span class="preprocessor">get</span> install gcc-<span class="preprocessor">arm</span>-linux-gnueabihf</span><br></pre></td></tr></table></figure>
+<p>然后执行下面命令<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git clone --depth 1 --branch pine64-hacks --single-branch https:<span class="comment">//github.com/longsleep/u-boot-pine64.git u-boot-pine64</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">cd</span> <span class="keyword">u</span>-<span class="keyword">boot</span>-pine64</span><br><span class="line">make <span class="keyword">ARCH</span>=arm CROSS_COMPILE=arm-linux-gnueabihf- sun50iw1p1_config</span><br><span class="line">make <span class="keyword">ARCH</span>=arm CROSS_COMPILE=arm-linux-gnueabihf-</span><br></pre></td></tr></table></figure></p>
+<p>2) bl31.bin的编译</p>
+<p>这一步不是必须的，因为github上的ARM Trust Firmware在Pine A64上还有点问题</p>
+<p>首先是需要安装gcc-aarch64-linux-gnu，推荐用5.2以上的版本</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-<span class="keyword">get</span> install  gcc-aarch64-linux-gnu</span><br></pre></td></tr></table></figure>
+<p>然后执行以下命令</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">git</span> clone --depth <span class="number">1</span> --<span class="keyword">branch </span>allwinner --single-<span class="keyword">branch </span>https://github.com/apritzel/<span class="preprocessor">arm</span>-trusted-firmware.git <span class="preprocessor">arm</span>-trusted-firmware-pine64</span><br><span class="line"></span><br><span class="line"><span class="label">cd</span> <span class="preprocessor">arm</span>-trusted-firmware-pine64</span><br><span class="line"><span class="label">make</span> clean</span><br><span class="line"><span class="label">make</span> ARCH<span class="label">=arm</span> CROSS_COMPILE<span class="label">=aarch64</span>-linux-gnu- PLAT<span class="label">=sun50iw1p1</span> <span class="keyword">bl31</span></span><br></pre></td></tr></table></figure>
+<p>3) 安装全志打包工具</p>
+<p>这里安装用来把uboot.bin、bl31.bin、scp.bin、dtb打包成u-boot-with-dtb.bin的工具<br><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/longsleep/sunxi-<span class="built_in">pack</span>-tools.git sunxi-<span class="built_in">pack</span>-tools</span><br><span class="line">make -C sunxi-<span class="built_in">pack</span>-tools</span><br></pre></td></tr></table></figure></p>
+<p>4) kernel的编译</p>
+<p>BSP kernel的编译</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">git clone --depth <span class="number">1</span> --branch pine64-hacks-<span class="number">1.2</span> --single-branch https://github.com/longsleep/linux-pine64.git linux-pine64</span><br><span class="line"></span><br><span class="line">cd linux-pine64</span><br><span class="line">make <span class="variable">ARCH=</span>arm64 <span class="variable">CROSS_COMPILE=</span>aarch64-linux-gnu- sun50iw1p1smp_linux_defconfig</span><br><span class="line">make <span class="variable">ARCH=</span>arm64 <span class="variable">CROSS_COMPILE=</span>aarch64-linux-gnu- <span class="variable">LOCALVERSION=</span> clean</span><br><span class="line">make <span class="variable">ARCH=</span>arm64 <span class="variable">CROSS_COMPILE=</span>aarch64-linux-gnu- -j4 <span class="variable">LOCALVERSION=</span> Image</span><br><span class="line">make <span class="variable">ARCH=</span>arm64 <span class="variable">CROSS_COMPILE=</span>aarch64-linux-gnu- -j4 <span class="variable">LOCALVERSION=</span> modules</span><br><span class="line"></span><br><span class="line">cd modules/gpu</span><br><span class="line"><span class="variable">LICHEE_KDIR=</span>$(pwd)/../.. </span><br><span class="line"><span class="variable">LICHEE_PLATFORM=</span>Pine64</span><br><span class="line">make build</span><br></pre></td></tr></table></figure>
+<p>Mainline kernel的编译</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">git clone --depth <span class="number">1</span> --branch a64-v4 --single-branch https://github.com/apritzel/linux.git linux-a64</span><br><span class="line"></span><br><span class="line">cd linux-pine64</span><br><span class="line">make <span class="variable">ARCH=</span>arm64 <span class="variable">CROSS_COMPILE=</span>aarch64-linux-gnu- defconfig</span><br><span class="line">make <span class="variable">ARCH=</span>arm64 <span class="variable">CROSS_COMPILE=</span>aarch64-linux-gnu- clean</span><br><span class="line">make <span class="variable">ARCH=</span>arm64 <span class="variable">CROSS_COMPILE=</span>aarch64-linux-gnu- -j4 Image</span><br><span class="line">make <span class="variable">ARCH=</span>arm64 <span class="variable">CROSS_COMPILE=</span>aarch64-linux-gnu- -j4 modules</span><br><span class="line">make <span class="variable">ARCH=</span>arm64 <span class="variable">CROSS_COMPILE=</span>aarch64-linux-gnu- -j4 dtbs</span><br></pre></td></tr></table></figure>
+<p>5) busybox的编译</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">git</span> clone --depth <span class="number">1</span> --<span class="keyword">branch </span><span class="number">1</span>_24_stable --single-<span class="keyword">branch </span>git://git.<span class="keyword">busybox.net/busybox </span><span class="keyword">busybox</span><br><span class="line"></span></span><br><span class="line"><span class="label">cd</span> <span class="keyword">busybox</span><br><span class="line"></span><span class="label">make</span> ARCH<span class="label">=arm64</span> CROSS_COMPILE<span class="label">=aarch64</span>-linux-gnu- -j4 oldconfig</span><br><span class="line"><span class="label">make</span> ARCH<span class="label">=arm64</span> CROSS_COMPILE<span class="label">=aarch64</span>-linux-gnu- -j4</span><br></pre></td></tr></table></figure>
+<p>6) rootfs的制作</p>
+<p>下面以debian 8.0为例，记录rootfs的制作。主要使用的命令就是debootstrap</p>
+<p>a) 安装debootstrap</p>
+<p> 注意，推荐安装1.0.78或者以上版本的debootstrap。因为要确保<code>/usr/share/debootstrap/scripts/</code><br>目录下有比较新的debian或者ubuntu系统的安装脚本</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-<span class="keyword">get</span> install debootstrap</span><br></pre></td></tr></table></figure>
+<p>debootstrap的安装rootfs分为两个phase，phase-1是在host上下载必要的文件，<br>phase-2则是chroot到rootfs里之后，用qemu来模拟执行target系统里的一些命令来做必要的配置，<br>或者安装所需的包</p>
+<p>phase-1：</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">targetdir=rootfs</span><br><span class="line"></span><br><span class="line"><span class="comment">#jessie是debian 8.0的代号，同理如果想装ubuntu 16.06，这里设置成xenial即可</span></span><br><span class="line">distro=jessie</span><br><span class="line"><span class="keyword">mkdir</span> <span class="variable">$targetdir</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#pine A64是arm64指令集架构的soc</span></span><br><span class="line"></span><br><span class="line">sudo debootstrap --arch=arm64 --foreign <span class="variable">$distro</span> <span class="variable">$targetdir</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#拷贝用于模拟执行target系统程序的qemu程序，给chroot用</span></span><br><span class="line">sudo cp /usr/bin/qemu-aarch64-static <span class="variable">$targetdir</span>/usr/bin/</span><br><span class="line">sudo cp /etc/resolv.conf <span class="variable">$targetdir</span>/etc</span><br><span class="line">sudo <span class="keyword">chroot</span> <span class="variable">$targetdir</span></span><br></pre></td></tr></table></figure>
+<p>phase-2：</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">#chroot到target系统后，在host里的环境变量没了，这里重新设置一下</span><br><span class="line">distro=jessie</span><br><span class="line">export LANG=C </span><br><span class="line">/debootstrap/debootstrap --second-stage</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#这里更新一下源</span><br><span class="line">cat &lt;&lt;EOT &gt; /etc/apt/sources.list</span><br><span class="line">deb http://ftp.uk.debian.org/debian $distro main contrib non-free</span><br><span class="line">deb-src http://ftp.uk.debian.org/debian $distro main contrib non-free</span><br><span class="line">deb http://ftp.uk.debian.org/debian $distro-updates main contrib non-free</span><br><span class="line">deb-src http://ftp.uk.debian.org/debian $distro-updates main contrib non-free&lt;</span><br><span class="line">deb http://security.debian.org/debian-security $distro/updates main contrib non-free</span><br><span class="line">deb-src http://security.debian.org/debian-security $distro/updates main contrib non-free</span><br><span class="line"></span><br><span class="line">EOT </span><br><span class="line"></span><br><span class="line">apt-get update</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">#重新配置locale</span><br><span class="line">apt-get install locales dialog sudo</span><br><span class="line">dpkg-reconfigure locales</span><br><span class="line"></span><br><span class="line">#设置sudo sticky属性，和<span class="keyword">man</span>文件夹用户组</span><br><span class="line">chmod u+s /usr/bin/sudo</span><br><span class="line">chown -R <span class="keyword">man</span> /var/cache/<span class="keyword">man</span></span><br><span class="line"></span><br><span class="line">#这里安装一些需要的包，比如ssh server，这样刷机后，就可以远程登陆板子了</span><br><span class="line">apt-get install openssh-server ntpdate</span><br><span class="line"></span><br><span class="line">#设置一下root用户密码</span><br><span class="line">passwd</span><br><span class="line"></span><br><span class="line">#这里设置一下串口控制台</span><br><span class="line">echo T0:2345:respawn:/sbin/getty -L ttyS0 -a root 115200 vt100 &gt;&gt; /etc/inittab</span><br></pre></td></tr></table></figure>
+<h3 id="使用脚本进行源码下载编译和镜像生成">使用脚本进行源码下载编译和镜像生成</h3><p>1) 下载源码</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./download_source.<span class="keyword">sh</span></span><br></pre></td></tr></table></figure>
+<p>2) 编译源码</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./compile_source.<span class="keyword">sh</span></span><br></pre></td></tr></table></figure>
+<p>3) 生成rootfs(这个只需要执行一次，完成后基本就不需要再重新生成了)</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#再rootfs_base目录下debootstrap一个新debian系统，并对它进行配置</span><br><span class="line">./make_rootfs<span class="class">.sh</span> rootfs_base</span><br><span class="line"></span><br><span class="line">#安装内核头文件到rootfs</span><br><span class="line">./install_kernel_headers<span class="class">.sh</span> rootfs_base</span><br><span class="line"></span><br><span class="line">#安装内核模块到rootfs</span><br><span class="line">./install_kernel_modules<span class="class">.sh</span> rootfs_base</span><br></pre></td></tr></table></figure>
+<p>4) 生成镜像</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./make_image<span class="class">.sh</span> test<span class="class">.img</span> <span class="number">2048</span></span><br></pre></td></tr></table></figure>
+<h3 id="挂载已有的镜像，并对个别文件进行更新">挂载已有的镜像，并对个别文件进行更新</h3><p>每次重新生成镜像的时间会比较久，如果只是相对单个文件进行更新，<br>只需要挂载已有镜像的rootfs分区，再更新就可以了</p>
+<p>挂载已有镜像的rootfs分区<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir rootfs_tmp1</span><br><span class="line">sudo losetup /dev/loop<span class="number">0</span> <span class="variable">$1</span> -o <span class="variable">$(</span>(<span class="number">143360</span> * <span class="number">512</span>))</span><br><span class="line">sudo mount /dev/loop<span class="number">0</span> rootfs</span><br></pre></td></tr></table></figure></p>
+<p>对个别文件更新完毕，卸载挂载的分区</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo umount rootfs</span><br><span class="line">sudo losetup <span class="operator">-d</span> /dev/loop0</span><br></pre></td></tr></table></figure>
+<h3 id="刷写镜像">刷写镜像</h3><p>用Win32DiskImager这个工具即可</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://transing.xyz/2016/06/20/Pine-A64-Debian-System-Makeing/" data-title="Pine A64 Debian System Makeing | 奇点2050" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2016/05/27/concepts-about-boots/"  title="arm boot流程">
+ <strong>下一篇：</strong><br/> 
+ <span>arm boot流程
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/06/20/Pine-A64-Debian-System-Makeing/" data-title="Pine A64 Debian System Makeing" data-url="http://transing.xyz/2016/06/20/Pine-A64-Debian-System-Makeing/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:qdk0901@qq.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="transinger">transinger</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"transing"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1256120787'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1256120787' type='text/javascript'%3E%3C/script%3E"));</script>
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
